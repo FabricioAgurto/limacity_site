@@ -160,29 +160,35 @@
   🛠️ Panel LimaCityRP
 </button>
 
-<!-- Netlify Identity Widget -->
+<!-- Netlify Identity widget en la HOME -->
 <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 <script>
   if (window.netlifyIdentity) {
-    window.netlifyIdentity.on("init", (user) => {
-      const btn = document.getElementById("openAdmin");
-      btn.addEventListener("click", () => {
-        if (user) {
-          // Si el usuario ya está logueado, entra directo al panel
-          document.location.href = "/admin/";
-        } else {
-          // Si no, abre el login de Netlify Identity
-          window.netlifyIdentity.open();
-        }
-      });
-    });
-
-    // Si alguien se loguea desde el popup, redirígelo al panel
+    // Solo redirige a /admin cuando vienes del botón "Panel"
     window.netlifyIdentity.on("login", () => {
-      document.location.href = "/admin/";
+      if (sessionStorage.getItem("go_admin_after_login") === "1") {
+        sessionStorage.removeItem("go_admin_after_login");
+        location.href = "/admin/";
+      }
     });
   }
 </script>
+
+<!-- Botón para abrir panel (opcional) -->
+<button id="openAdmin">🛠️ Panel LimaCityRP</button>
+<script>
+  document.getElementById("openAdmin")?.addEventListener("click", () => {
+    if (window.netlifyIdentity && window.netlifyIdentity.currentUser()) {
+      location.href = "/admin/";
+    } else if (window.netlifyIdentity) {
+      sessionStorage.setItem("go_admin_after_login", "1");
+      window.netlifyIdentity.open();
+    } else {
+      location.href = "/admin/";
+    }
+  });
+</script>
+
 <!-- Parser Markdown -->
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
