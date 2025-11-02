@@ -1,6 +1,12 @@
 {
   "items": [
     {
+      "author": "Staff",
+      "date": "2025-11-02",
+      "title": "asd",
+      "summary": "asd"
+    },
+    {
       "title": "Nueva web publicada en Netlify",
       "date": "2025-11-01",
       "author": "Staff",
