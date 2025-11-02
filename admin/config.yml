@@ -2,16 +2,49 @@ backend:
   name: git-gateway
   branch: main
 
+local_backend: false
+
+site_url: https://limacityrp.netlify.app
+display_url: https://limacityrp.netlify.app
+
 media_folder: "static/uploads"
 public_folder: "/uploads"
 
-collections:
-  - name: "noticias"
-    label: "Noticias"
-    folder: "content/noticias"
-    create: true
-    slug: "{{slug}}"
-    fields:
-      - { label: "Título", name: "title", widget: "string" }
-      - { label: "Contenido", name: "body", widget: "markdown" }
+publish_mode: editorial_workflow   # editores crean, directores publican
 
+collections:
+  # ÚNICA colección visible: actualiza el feed que la home consume
+  - name: "updates"
+    label: "Noticias (cards)"
+    label_singular: "Noticia"
+    files:
+      - file: "content/updates.json"
+        label: "Listado de noticias"
+        name: "updates_json"
+        fields:
+          - label: "Noticias"
+            name: "items"
+            widget: "list"
+            summary: "{{fields.title}} — {{fields.date}}"
+            fields:
+              - { label: "Título", name: "title", widget: "string" }
+              - { label: "Fecha", name: "date", widget: "datetime", format: "YYYY-MM-DD", time_format: false }
+              - { label: "Autor", name: "author", widget: "string", default: "Staff" }
+              - { label: "Resumen", name: "summary", widget: "text" }
+              - { label: "Slug (opcional)", name: "slug", widget: "string", required: false }
+              - { label: "URL (Leer más)", name: "url", widget: "string", required: false }
+
+  # ❌ Desactiva la colección de artículos en Markdown para que no creen más .md
+  # Si deseas mantenerla oculta (no visible), deja create: false y omitela del menú.
+  # - name: "noticias"
+  #   label: "Artículos (Markdown)"
+  #   folder: "content/noticias"
+  #   create: false
+  #   slug: "{{slug}}"
+  #   format: "frontmatter"
+  #   fields:
+  #     - { label: "Título", name: "title", widget: "string" }
+  #     - { label: "Fecha", name: "date", widget: "datetime", format: "YYYY-MM-DD", time_format: false }
+  #     - { label: "Autor", name: "author", widget: "string", default: "Staff" }
+  #     - { label: "Resumen", name: "summary", widget: "text" }
+  #     - { label: "Cuerpo", name: "body", widget: "markdown" }
