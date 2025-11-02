@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin · Lima City RP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#0b0f1a;--panel:#0f1626;--text:#e6e6f0;--muted:#9aa3b2;--brand1:#7c3aed;--brand2:#06b6d4;--brand3:#ec4899;--glass:rgba(255,255,255,.06);--radius:16px}
+    *{box-sizing:border-box} body{margin:0;font-family:Outfit,system-ui;background:var(--bg);color:var(--text)}
+    header{position:sticky;top:0;padding:14px 16px;background:linear-gradient(180deg, rgba(15,22,38,.95), transparent)}
+    .wrap{max-width:1000px;margin:0 auto;padding:0 16px}
+    h1{font-size:22px;margin:0}
+    .card{background:var(--glass);border:1px solid rgba(255,255,255,.08);border-radius:var(--radius);padding:14px;margin:14px 0}
+    .row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+    label{font-size:.9rem;color:var(--muted)}
+    input,textarea{width:100%;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:#0f1320;color:var(--text)}
+    textarea{min-height:110px;resize:vertical}
+    button{border:0;padding:10px 14px;border-radius:10px;background:linear-gradient(90deg,var(--brand2),var(--brand3));color:#fff;font-weight:700;cursor:pointer}
+    .secondary{background:transparent;border:1px solid rgba(255,255,255,.2);}
+    .muted{color:var(--muted)} .space{height:8px}
+    .list .item{padding:12px;border:1px dashed rgba(255,255,255,.15);border-radius:12px;margin:10px 0}
+    .right{display:flex;gap:8px;justify-content:flex-end}
+    .warn{font-size:.92rem;color:#fde68a;background:rgba(250,204,21,.12);border:1px solid rgba(250,204,21,.35);padding:8px 10px;border-radius:10px}
+    .ok{color:#34d399} .err{color:#f87171}
+    small{color:var(--muted)}
+    code{background:rgba(255,255,255,.08);padding:2px 6px;border-radius:6px}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap"><h1>Panel Admin — Lima City RP</h1></div>
+  </header>
+
+  <main class="wrap">
+    <div class="card warn">
+      ⚠️ <b>Seguridad:</b> Este panel usa el <b>API de GitHub</b> desde tu navegador.
+      <br>Ingresa tu <b>token personal</b> cuando vayas a guardar. <u>No se guarda</u> en el servidor ni en localStorage.
+      <br>Crea un token en GitHub con permiso <code>repo</code> → <i>classic</i>. Puedes revocarlo cuando quieras.
+    </div>
+
+    <div class="card">
+      <div class="row">
+        <div>
+          <label>Usuario (owner)</label>
+          <input id="owner" value="fabricioagurtomorveli20202455-droid">
+        </div>
+        <div>
+          <label>Repo</label>
+          <input id="repo" value="LimaCity-RP">
+        </div>
+        <div>
+          <label>Rama</label>
+          <input id="branch" value="main">
+        </div>
+      </div>
+      <div class="space"></div>
+      <label>Ruta del JSON</label>
+      <input id="path" value="limacity_site/content/updates.json">
+      <div class="space"></div>
+      <div class="right">
+        <button id="btnLoad" class="secondary">Cargar desde GitHub</button>
+        <button id="btnExport" class="secondary">Exportar JSON</button>
+        <button id="btnAdd">Añadir actualización</button>
+      </div>
+    </div>
+
+    <div id="list" class="list"></div>
+
+    <div class="card">
+      <label>Token GitHub (se usa solo para Guardar)</label>
+      <input id="token" type="password" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+      <div class="space"></div>
+      <div class="right">
+        <button id="btnSave">Guardar en GitHub</button>
+      </div>
+      <div id="status" class="muted"></div>
+    </div>
+  </main>
+
+  <template id="tpl">
+    <div class="item">
+      <div class="row">
+        <div>
+          <label>Fecha</label>
+          <input data-k="date" placeholder="YYYY-MM-DD">
+        </div>
+        <div>
+          <label>Autor</label>
+          <input data-k="author" placeholder="Autor">
+        </div>
+        <div>
+          <label>Título</label>
+          <input data-k="title" placeholder="Título">
+        </div>
+      </div>
+      <div class="space"></div>
+      <label>Resumen</label>
+      <textarea data-k="summary" placeholder="Resumen corto"></textarea>
+      <div class="space"></div>
+      <label>Detalles</label>
+      <textarea data-k="details" placeholder="Descripción detallada"></textarea>
+      <div class="space"></div>
+      <div class="right">
+        <button data-act="up" class="secondary">↑</button>
+        <button data-act="down" class="secondary">↓</button>
+        <button data-act="del" class="secondary">Eliminar</button>
+      </div>
+    </div>
+  </template>
+
+  <script src="admin.js"></script>
+</body>
+</html>

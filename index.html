@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lima City RP</title>
+  <meta name="description" content="Servidor Lima City RP — normativas, equipo, tienda y actualizaciones." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap navwrap">
+      <a href="#inicio" class="logo">Lima <span>City</span> <b>RP</b></a>
+      <nav id="nav" class="nav">
+        <a href="#inicio">Inicio</a>
+        <a href="#normativas">Normativas</a>
+        <a href="#equipo">Equipo</a>
+        <a href="#tienda">Tienda</a>
+        <a href="#actualizaciones">Actualizaciones</a>
+      </nav>
+      <button id="hamburger" aria-label="Abrir menú" class="hamburger">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main id="inicio" class="hero">
+    <div class="wrap">
+      <div class="hero-card glass">
+        <h1>Bienvenido a <span class="grad">Lima City RP</span></h1>
+        <p>Servidor de rol con enfoque en experiencias realistas y divertidas. Explora las <b>Normativas</b>, conoce al <b>Equipo</b>, visita la <b>Tienda</b> y revisa las últimas <b>Actualizaciones</b>.</p>
+        <div class="actions">
+          <a class="btn" href="#tienda">Ir a la tienda</a>
+          <a class="btn ghost" href="#normativas">Ver normativas</a>
+        </div>
+      </div>
+    </div>
+    <div class="bg-blur"></div>
+  </main>
+
+  <section id="novedades" class="section">
+    <div class="wrap">
+      <h2>¿Qué hay de nuevo?</h2>
+      <p class="muted">Esta es una vista rápida de los últimos cambios del servidor.</p>
+      <ul id="novedades-list" class="cards"></ul>
+      <p class="tip">Consejo: El panel de edición se encuentra en <code>/public/admin</code> (placeholder por ahora).</p>
+    </div>
+  </section>
+
+  <section id="normativas" class="section">
+    <div class="wrap">
+      <h2>Normativas</h2>
+      <ol class="list">
+        <li>Respeto entre jugadores y staff en todo momento.</li>
+        <li>Prohibido el uso de hacks, glitches o ventajas injustas.</li>
+        <li>El rol debe ser coherente; evita el <b>powergaming</b> y <b>metagaming</b>.</li>
+        <li>Seguir indicaciones del staff. Incumplimientos pueden conllevar sanciones.</li>
+      </ol>
+      <p class="muted">Puedes editar este contenido en <code>index.html</code> o migrarlo a un CMS ligero después.</p>
+    </div>
+  </section>
+
+  <section id="equipo" class="section">
+    <div class="wrap">
+      <h2>Equipo</h2>
+      <div class="grid2">
+        <div class="card glass">
+          <h3>Fundador</h3>
+          <p>Fabricio “xzZoom” Agurto</p>
+        </div>
+        <div class="card glass">
+          <h3>Staff</h3>
+          <p>Subdirectores y moderadores — próximamente listado completo.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="tienda" class="section">
+    <div class="wrap">
+      <h2>Tienda</h2>
+      <p class="muted">Próximamente: donaciones, VIPs, skins y más. Integraremos pagos con PayPal/Stripe.</p>
+      <div class="grid3">
+        <div class="card glass">
+          <h3>VIP Bronze</h3>
+          <p>Beneficios básicos para empezar a apoyar.</p>
+          <a class="btn small" href="#">Muy pronto</a>
+        </div>
+        <div class="card glass">
+          <h3>VIP Silver</h3>
+          <p>Ventajas adicionales y prioridad en cola.</p>
+          <a class="btn small" href="#">Muy pronto</a>
+        </div>
+        <div class="card glass">
+          <h3>VIP Gold</h3>
+          <p>Beneficios completos + reconocimientos en Discord.</p>
+          <a class="btn small" href="#">Muy pronto</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="actualizaciones" class="section">
+    <div class="wrap">
+      <h2>Actualizaciones</h2>
+      <div id="updates" class="timeline"></div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="wrap">
+      <p>© <span id="year"></span> Lima City RP — Todos los derechos reservados.</p>
+      <p class="mini">Hecho con ♥ por el equipo de LimaCity.</p>
+    </div>
+  </footer>
+
+  <script src="assets/script.js"></script>
+</body>
+</html>

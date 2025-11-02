@@ -1,0 +1,23 @@
+[
+  {
+    "date": "2025-11-01",
+    "author": "Staff",
+    "title": "Nueva web publicada en Netlify",
+    "summary": "Sitio oficial online con diseño neon y secciones principales.",
+    "details": "Lanzamos la primera versión del sitio con Inicio, Normativas, Equipo, Tienda y Actualizaciones. Próximo paso: panel de edición y dominio."
+  },
+  {
+    "date": "2025-11-02",
+    "author": "xzZoom",
+    "title": "Optimización móvil",
+    "summary": "Mejoras de rendimiento y navegación móvil.",
+    "details": "Se optimizó el menú responsive, sombras y fuentes para un rendimiento fluido en teléfonos."
+  },
+  {
+    "date": "2025-11-03",
+    "author": "Staff",
+    "title": "Plan de VIPs",
+    "summary": "Definición de tiers Bronze, Silver y Gold.",
+    "details": "Se definieron beneficios iniciales y flujos de compra. Integración de pagos llegará en la siguiente iteración."
+  }
+]
