@@ -5,64 +5,44 @@
     <title>LimaCityRP Panel</title>
   </head>
   <body>
-    <!-- Carga los scripts al final (o con defer) para que document.body exista -->
+    <!-- Botón fijo para volver al sitio principal -->
+    <a href="/"
+       style="
+         position:fixed;
+         top:14px; left:14px;
+         z-index:2147483647;
+         background:#1f2937;
+         color:#fff;
+         padding:8px 12px;
+         border-radius:8px;
+         text-decoration:none;
+         font-weight:700;
+         box-shadow:0 6px 16px rgba(0,0,0,.25);
+       ">
+      ← Volver al sitio
+    </a>
+
+    <!-- Scripts del CMS -->
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js" defer></script>
     <script src="https://unpkg.com/netlify-cms@^2.0.0/dist/netlify-cms.js" defer></script>
+
     <script>
       document.addEventListener("DOMContentLoaded", function () {
         if (window.netlifyIdentity) {
-          window.netlifyIdentity.on("init", (user) => {
-            if (!user) {
-              window.netlifyIdentity.on("login", () => {
-                document.location.href = "/admin/";
-              });
-            }
+          // Si inicia sesión desde el popup, vuelve al dashboard del CMS
+          window.netlifyIdentity.on("login", () => {
+            document.location.href = "/admin/";
+          });
+          // Si cierra sesión desde el menú del CMS, vuelve al sitio
+          window.netlifyIdentity.on("logout", () => {
+            document.location.href = "/";
           });
         }
       });
     </script>
-<!-- Botón para volver al sitio principal -->
-<script>
-  (function () {
-    function injectBackLink() {
-      const header = document.querySelector(".nc-appHeader");
-      if (!header || header.querySelector("#back-to-site")) return;
-
-      const link = document.createElement("a");
-      link.id = "back-to-site";
-      link.href = "/";
-      link.textContent = "← Volver al sitio";
-      link.style.display = "inline-block";
-      link.style.marginLeft = "20px";
-      link.style.padding = "6px 10px";
-      link.style.borderRadius = "6px";
-      link.style.background = "rgba(255,255,255,0.12)";
-      link.style.color = "white";
-      link.style.textDecoration = "none";
-      link.style.fontWeight = "600";
-      link.style.lineHeight = "1";
-      link.style.cursor = "pointer";
-      link.setAttribute("title", "Regresar a la web principal");
-
-      // inserta al inicio del header para que siempre sea visible
-      header.insertBefore(link, header.firstChild);
-    }
-
-    // 1) intentar ahora
-    injectBackLink();
-
-    // 2) volver a intentar cuando cambian nodos (navegación interna del CMS)
-    const obs = new MutationObserver(injectBackLink);
-    obs.observe(document.documentElement, { childList: true, subtree: true });
-
-    // 3) fallback por si acaso
-    document.addEventListener("DOMContentLoaded", injectBackLink);
-    window.addEventListener("load", injectBackLink);
-  })();
-</script>
-
-</body>
+  </body>
 </html>
+
 
 
 
