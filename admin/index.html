@@ -3,33 +3,26 @@
   <head>
     <meta charset="utf-8" />
     <title>LimaCityRP Panel</title>
-    <!-- Widget de Netlify Identity -->
-    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-    <script>
-      if (window.netlifyIdentity) {
-        netlifyIdentity.on("init", (user) => {
-          if (!user) {
-            // netlifyIdentity.open(); // descomenta si quieres que se abra automático
-          }
-        });
-      }
-    </script>
-
-    <!-- Decap/Netlify CMS -->
-    <script src="https://unpkg.com/netlify-cms@^2.0.0/dist/netlify-cms.js"></script>
-    <script>
-      if (window.netlifyIdentity) {
-        window.netlifyIdentity.on("init", (user) => {
-          if (!user) {
-            window.netlifyIdentity.on("login", () => {
-              document.location.href = "/admin/";
-            });
-          }
-        });
-      }
-    </script>
   </head>
-  <body></body>
+  <body>
+    <!-- Carga los scripts al final (o con defer) para que document.body exista -->
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js" defer></script>
+    <script src="https://unpkg.com/netlify-cms@^2.0.0/dist/netlify-cms.js" defer></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        if (window.netlifyIdentity) {
+          window.netlifyIdentity.on("init", (user) => {
+            if (!user) {
+              window.netlifyIdentity.on("login", () => {
+                document.location.href = "/admin/";
+              });
+            }
+          });
+        }
+      });
+    </script>
+  </body>
 </html>
+
 
 
