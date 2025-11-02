@@ -43,30 +43,70 @@
     <div class="bg-blur"></div>
   </main>
   <!-- ====== NOTICIAS LIMA CITY RP ====== -->
-<section id="noticias" class="bg-[#0f0f0f] py-8 px-6">
-  <h2 class="text-3xl font-bold text-white mb-8 text-center">📰 Noticias del servidor</h2>
+<!-- ==== NOTICIAS DEL SERVIDOR (cards) ==== -->
+<section id="noticias" class="py-12 px-6 md:px-10">
+  <h2 class="text-3xl md:text-4xl font-extrabold text-white mb-2">
+    📰 Noticias del servidor
+  </h2>
+  <p class="text-zinc-400 mb-8">Últimas novedades y anuncios oficiales.</p>
 
-  <div id="news-container" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-    <!-- Las noticias se insertarán aquí dinámicamente -->
+  <div id="news-cards" class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+    <!-- Las tarjetas se generan por JS -->
   </div>
 </section>
 
 <script>
-  // Cargar noticias desde los archivos JSON o Markdown convertidos
-  fetch('/content/updates.json')
-    .then((res) => res.json())
-    .then((data) => {
-      const container = document.getElementById('news-container');
-      container.innerHTML = data.map(item => `
-        <div class="bg-zinc-900 rounded-2xl p-5 border border-zinc-800 shadow-md hover:scale-[1.02] transition-all">
-          <h3 class="text-lg text-white font-semibold mb-2">${item.title}</h3>
-          <p class="text-gray-400 text-sm mb-3">${item.summary || item.excerpt}</p>
-          <a href="${item.url}" class="text-indigo-400 hover:text-indigo-300 text-sm">Leer más →</a>
-        </div>
-      `).join('');
+  // Utilidad: formatea YYYY-MM-DD a algo más legible
+  function formatDate(iso) {
+    try {
+      const d = new Date(iso);
+      if (isNaN(d)) return iso;
+      return d.toISOString().slice(0,10); // simple y consistente
+    } catch { return iso; }
+  }
+
+  // Genera una tarjeta con el mismo look & feel de tus cards inferiores
+  function renderCard(item) {
+    const title = item.title || "Sin título";
+    const date  = formatDate(item.date || item.published_at || "");
+    const author = item.author || item.staff || "Staff";
+    const summary = item.summary || item.excerpt || "";
+    // Si tu updates.json trae 'url', úsala; si no, genera por slug:
+    const url = item.url || (item.slug ? `/noticias/${item.slug}/` : "#");
+
+    return `
+      <article class="rounded-2xl bg-zinc-900/90 border border-zinc-800 p-6 shadow-lg hover:shadow-xl transition-all">
+        <h3 class="text-lg md:text-xl font-semibold text-white mb-2">${title}</h3>
+        <div class="text-zinc-400 text-xs mb-3">${date}${author ? " · " + author : ""}</div>
+        <p class="text-zinc-300 text-sm mb-4">${summary}</p>
+        <a href="${url}" class="text-indigo-400 hover:text-indigo-300 text-sm font-medium">
+          Leer más →
+        </a>
+      </article>
+    `;
+  }
+
+  // Carga desde /content/updates.json (ya existe en tu proyecto)
+  fetch('/content/updates.json', { cache: 'no-cache' })
+    .then(r => r.json())
+    .then(list => {
+      // Asegúrate de que sea un array
+      const items = Array.isArray(list) ? list : (list.items || []);
+      // Ordena por fecha descendente si existe
+      items.sort((a, b) => new Date(b.date || b.published_at || 0) - new Date(a.date || a.published_at || 0));
+
+      const container = document.getElementById('news-cards');
+      container.innerHTML = items.map(renderCard).join('');
     })
-    .catch(err => console.error('Error al cargar las noticias:', err));
+    .catch(err => {
+      console.error('Error cargando noticias:', err);
+      const container = document.getElementById('news-cards');
+      container.innerHTML = `
+        <div class="text-zinc-400">No se pudieron cargar las noticias por ahora.</div>
+      `;
+    });
 </script>
+
 
 
 <!-- Markdown parser -->
@@ -134,16 +174,6 @@
 })();
 </script>
 
-
-
-  <section id="novedades" class="section">
-    <div class="wrap">
-      <h2>¿Qué hay de nuevo?</h2>
-      <p class="muted">Esta es una vista rápida de los últimos cambios del servidor.</p>
-      <ul id="novedades-list" class="cards"></ul>
-      <p class="tip">Consejo: El panel de edición se encuentra en <code>/public/admin</code> (placeholder por ahora).</p>
-    </div>
-  </section>
 
   <section id="normativas" class="section">
     <div class="wrap">
