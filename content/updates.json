@@ -1,26 +1,34 @@
 {
   "items": [
     {
-      "title": "Nueva web publicada en Netlify",
-      "date": "2025-11-01",
       "author": "Staff",
-      "summary": "Sitio oficial online con diseño neon y moderno.",
-      "slug": "nueva-web-publicada-en-netlify",
-      "url": "/noticias/nueva-web-publicada-en-netlify/"
+      "date": "2025-11-02",
+      "title": "prueba1",
+      "summary": "sadasd"
     },
     {
-      "title": "Nueva web publicada en Netlify",
-      "date": "2025-11-01",
       "author": "Staff",
-      "summary": "Sitio oficial online con diseño neon y moderno.",
-      "slug": "nueva-web-publicada-en-netlify",
-      "url": "/noticias/nueva-web-publicada-en-netlify/"
+      "date": "2025-11-02",
+      "title": "asd",
+      "summary": "asd"
     },
     {
       "author": "Geral",
       "date": "2025-11-02",
       "title": "random",
       "summary": "nara"
+    },
+    {
+      "author": "Staff",
+      "date": "2025-11-02",
+      "title": "prueba",
+      "summary": "prueba"
+    },
+    {
+      "author": "Staff",
+      "date": "2025-11-02",
+      "title": "asddd",
+      "summary": "daddd"
     }
   ]
 }
