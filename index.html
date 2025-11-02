@@ -300,27 +300,48 @@
     });
   }
   </script>
-<!-- Netlify Identity: cargar solo una vez -->
+<!-- Netlify Identity -->
 <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   const adminBtn = document.getElementById("openAdmin");
-  if (adminBtn) {
-    adminBtn.addEventListener("click", () => {
-      if (window.netlifyIdentity && window.netlifyIdentity.currentUser()) {
-        location.href = "/admin/";
-      } else if (window.netlifyIdentity) {
-        sessionStorage.setItem("go_admin_after_login", "1");
-        window.netlifyIdentity.open();
-      } else {
-        location.href = "/admin/";
-      }
-    });
+
+  function hasRole(user, roles) {
+    const r = user?.app_metadata?.roles || [];
+    return roles.some(role => r.includes(role));
   }
 
+  function toggleButton(user) {
+    if (!adminBtn) return;
+    if (user && hasRole(user, ["admin", "editor","writer"])) {
+      adminBtn.style.display = "inline-flex"; // mostrar botón Panel
+    } else {
+      adminBtn.style.display = "none"; // ocultar si no tiene rol
+    }
+  }
+
+  // --- Detecta login/logout/inicio ---
   if (window.netlifyIdentity) {
-    window.netlifyIdentity.on("login", () => {
+    netlifyIdentity.on("init", user => toggleButton(user));
+    netlifyIdentity.on("login", user => toggleButton(user));
+    netlifyIdentity.on("logout", () => toggleButton(null));
+
+    netlifyIdentity.init();
+
+    adminBtn?.addEventListener("click", () => {
+      const user = netlifyIdentity.currentUser();
+      if (user && hasRole(user, ["admin", "editor","writer"])) {
+        location.href = "/admin/";
+      } else if (!user) {
+        sessionStorage.setItem("go_admin_after_login", "1");
+        netlifyIdentity.open();
+      } else {
+        alert("No tienes permiso para acceder al panel.");
+      }
+    });
+
+    netlifyIdentity.on("login", () => {
       if (sessionStorage.getItem("go_admin_after_login") === "1") {
         sessionStorage.removeItem("go_admin_after_login");
         location.href = "/admin/";
@@ -329,6 +350,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 </script>
+
 
 
 
