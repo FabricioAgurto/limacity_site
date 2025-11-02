@@ -1,160 +1,269 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LimaCity RP - Servidor Oficial</title>
-  <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lima City RP</title>
+  <meta name="description" content="Servidor Lima City RP — normativas, equipo, tienda y actualizaciones." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
-  <header>
-    <h1>LimaCity RP</h1>
-    <p>Servidor Roleplay Oficial</p>
+  <header class="site-header">
+    <div class="wrap navwrap">
+      <a href="#inicio" class="logo">Lima <span>City</span> <b>RP</b></a>
+      <nav id="nav" class="nav">
+        <a href="#inicio">Inicio</a>
+        <a href="#normativas">Normativas</a>
+        <a href="#equipo">Equipo</a>
+        <a href="#tienda">Tienda</a>
+        <a href="#actualizaciones">Actualizaciones</a>
+      
+
+      </nav>
+      <button id="hamburger" aria-label="Abrir menú" class="hamburger">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
   </header>
 
-  <!-- ==== NOTICIAS DEL SERVIDOR ==== -->
-  <section id="noticias" class="section">
+  <main id="inicio" class="hero">
     <div class="wrap">
-      <h2>📰 Noticias del servidor</h2>
-      <p class="muted">Últimas novedades y anuncios oficiales.</p>
+      <div class="hero-card glass">
+        <h1>Bienvenido a <span class="grad">Lima City RP</span></h1>
+        <p>Servidor de rol con enfoque en experiencias realistas y divertidas. Explora las <b>Normativas</b>, conoce al <b>Equipo</b>, visita la <b>Tienda</b> y revisa las últimas <b>Actualizaciones</b>.</p>
+        <div class="actions">
+          <a class="btn" href="#tienda">Ir a la tienda</a>
+          <a class="btn ghost" href="#normativas">Ver normativas</a>
+        </div>
+      </div>
+    </div>
+    <div class="bg-blur"></div>
+  </main>
+  <!-- ====== NOTICIAS LIMA CITY RP ====== -->
+<!-- ==== NOTICIAS DEL SERVIDOR (cards) ==== -->
+<section id="noticias" class="py-12 px-6 md:px-10">
+  <h2 class="text-3xl md:text-4xl font-extrabold text-white mb-2">
+    📰 Noticias del servidor
+  </h2>
+  <p class="text-zinc-400 mb-8">Últimas novedades y anuncios oficiales.</p>
 
-      <div id="news-cards" class="news-grid"></div>
-      <div id="news-fallback" class="muted" style="display:none;">No se pudieron cargar las noticias por ahora.</div>
+  <div id="news-cards" class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+    <!-- Las tarjetas se generan por JS -->
+  </div>
+</section>
+
+<script>
+  // Utilidad: formatea YYYY-MM-DD a algo más legible
+  function formatDate(iso) {
+    try {
+      const d = new Date(iso);
+      if (isNaN(d)) return iso;
+      return d.toISOString().slice(0,10); // simple y consistente
+    } catch { return iso; }
+  }
+
+  // Genera una tarjeta con el mismo look & feel de tus cards inferiores
+  function renderCard(item) {
+    const title = item.title || "Sin título";
+    const date  = formatDate(item.date || item.published_at || "");
+    const author = item.author || item.staff || "Staff";
+    const summary = item.summary || item.excerpt || "";
+    // Si tu updates.json trae 'url', úsala; si no, genera por slug:
+    const url = item.url || (item.slug ? `/noticias/${item.slug}/` : "#");
+
+    return `
+      <article class="rounded-2xl bg-zinc-900/90 border border-zinc-800 p-6 shadow-lg hover:shadow-xl transition-all">
+        <h3 class="text-lg md:text-xl font-semibold text-white mb-2">${title}</h3>
+        <div class="text-zinc-400 text-xs mb-3">${date}${author ? " · " + author : ""}</div>
+        <p class="text-zinc-300 text-sm mb-4">${summary}</p>
+        <a href="${url}" class="text-indigo-400 hover:text-indigo-300 text-sm font-medium">
+          Leer más →
+        </a>
+      </article>
+    `;
+  }
+
+  // Carga desde /content/updates.json (ya existe en tu proyecto)
+  fetch('/content/updates.json', { cache: 'no-cache' })
+    .then(r => r.json())
+    .then(list => {
+      // Asegúrate de que sea un array
+      const items = Array.isArray(list) ? list : (list.items || []);
+      // Ordena por fecha descendente si existe
+      items.sort((a, b) => new Date(b.date || b.published_at || 0) - new Date(a.date || a.published_at || 0));
+
+      const container = document.getElementById('news-cards');
+      container.innerHTML = items.map(renderCard).join('');
+    })
+    .catch(err => {
+      console.error('Error cargando noticias:', err);
+      const container = document.getElementById('news-cards');
+      container.innerHTML = `
+        <div class="text-zinc-400">No se pudieron cargar las noticias por ahora.</div>
+      `;
+    });
+</script>
+
+
+
+
+
+
+
+  <section id="normativas" class="section">
+    <div class="wrap">
+      <h2>Normativas</h2>
+      <ol class="list">
+        <li>Respeto entre jugadores y staff en todo momento.</li>
+        <li>Prohibido el uso de hacks, glitches o ventajas injustas.</li>
+        <li>El rol debe ser coherente; evita el <b>powergaming</b> y <b>metagaming</b>.</li>
+        <li>Seguir indicaciones del staff. Incumplimientos pueden conllevar sanciones.</li>
+      </ol>
+      <p class="muted">Puedes editar este contenido en <code>index.html</code> o migrarlo a un CMS ligero después.</p>
     </div>
   </section>
 
-  <style>
-    body {
-      background-color: #0d0d0d;
-      color: #fff;
-      font-family: Arial, sans-serif;
-    }
-    header {
-      text-align: center;
-      padding: 40px 10px;
-    }
-    header h1 {
-      font-size: 2.5rem;
-      margin: 0;
-    }
-    .section {
-      padding: 60px 20px;
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-    .muted { color: #a1a1aa; }
-    .news-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 16px;
-    }
-    @media (min-width: 768px) { .news-grid { grid-template-columns: 1fr 1fr; } }
-    @media (min-width: 1100px){ .news-grid { grid-template-columns: 1fr 1fr 1fr; } }
+  <section id="equipo" class="section">
+    <div class="wrap">
+      <h2>Equipo</h2>
+      <div class="grid2">
+        <div class="card glass">
+          <h3>Fundador</h3>
+          <p>Fabricio “xzZoom” Agurto</p>
+        </div>
+        <div class="card glass">
+          <h3>Staff</h3>
+          <p>Subdirectores y moderadores — próximamente listado completo.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-    .lc-news-card{
-      background: rgba(24,24,27,0.95);
-      border: 1px solid #27272a;
-      border-radius: 16px;
-      padding: 18px;
-      box-shadow: 0 10px 24px rgba(0,0,0,0.35);
-      transition: transform .18s ease, box-shadow .18s ease;
-    }
-    .lc-news-card:hover{
-      transform: translateY(-2px);
-      box-shadow: 0 14px 28px rgba(0,0,0,0.45);
-    }
-    .lc-news-title{
-      color: #fff;
-      font-weight: 700;
-      font-size: 18px;
-      margin: 0 0 6px;
-    }
-    .lc-news-meta{
-      color: #a1a1aa;
-      font-size: 12px;
-      margin-bottom: 10px;
-    }
-    .lc-news-text{
-      color: #e5e5e5;
-      font-size: 14px;
-      line-height: 1.5;
-      margin: 0 0 12px;
-    }
-    .lc-news-link{
-      color: #8ab4ff;
-      font-weight: 600;
-      font-size: 13px;
-      text-decoration: none;
-    }
-    .lc-news-link:hover{ opacity: .9; text-decoration: underline; }
-  </style>
+  <section id="tienda" class="section">
+    <div class="wrap">
+      <h2>Tienda</h2>
+      <p class="muted">Próximamente: donaciones, VIPs, skins y más. Integraremos pagos con PayPal/Stripe.</p>
+      <div class="grid3">
+        <div class="card glass">
+          <h3>VIP Bronze</h3>
+          <p>Beneficios básicos para empezar a apoyar.</p>
+          <a class="btn small" href="#">Muy pronto</a>
+        </div>
+        <div class="card glass">
+          <h3>VIP Silver</h3>
+          <p>Ventajas adicionales y prioridad en cola.</p>
+          <a class="btn small" href="#">Muy pronto</a>
+        </div>
+        <div class="card glass">
+          <h3>VIP Gold</h3>
+          <p>Beneficios completos + reconocimientos en Discord.</p>
+          <a class="btn small" href="#">Muy pronto</a>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  <script>
-    (function(){
-      function formatDate(iso){
-        try { const d = new Date(iso); return isNaN(d) ? "" : d.toISOString().slice(0,10); }
-        catch { return ""; }
-      }
-      function renderCard(item){
-        const title   = item.title  || "Sin título";
-        const date    = formatDate(item.date || item.published_at || "");
-        const author  = item.author || item.staff || "Staff";
-        const summary = item.summary || item.excerpt || "";
-        const url     = item.url || (item.slug ? ("/noticias/" + item.slug + "/") : "#");
+  <section id="actualizaciones" class="section">
+    <div class="wrap">
+      <h2>Actualizaciones</h2>
+      <div id="updates" class="timeline"></div>
+    </div>
+  </section>
 
-        const art = document.createElement("article");
-        art.className = "lc-news-card";
-        art.innerHTML = `
-          <h3 class="lc-news-title">${title}</h3>
-          <div class="lc-news-meta">${[date, author].filter(Boolean).join(" · ")}</div>
-          <p class="lc-news-text">${summary}</p>
-          <a class="lc-news-link" href="${url}">Leer más →</a>
-        `;
-        return art;
-      }
-      fetch("/content/updates.json", { cache: "no-cache" })
-        .then(r => r.json())
-        .then(data => {
-          const items = Array.isArray(data) ? data : (data.items || []);
-          items.sort((a,b) => new Date(b.date || b.published_at || 0) - new Date(a.date || a.published_at || 0));
-          const grid = document.getElementById("news-cards");
-          grid.innerHTML = "";
-          (items.length ? items : []).forEach(it => grid.appendChild(renderCard(it)));
-          if (!items.length) document.getElementById("news-fallback").style.display = "block";
-        })
-        .catch(() => {
-          document.getElementById("news-fallback").style.display = "block";
-        });
-    })();
-  </script>
+  <footer class="footer">
+    <div class="wrap">
+      <p>© <span id="year"></span> Lima City RP — Todos los derechos reservados.</p>
+      <p class="mini">Hecho con ♥ por el equipo de LimaCity.</p>
+    </div>
+  </footer>
 
-  <!-- Botón de Panel -->
-  <button id="openAdmin"
-    style="
-      position: fixed; bottom: 25px; right: 25px;
-      background: linear-gradient(135deg, #00b894, #00cec9);
-      color: white; border: none; padding: 12px 18px;
-      border-radius: 10px; cursor: pointer; font-weight: 600;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3); transition: all .2s;
-    "
-    onmouseover="this.style.transform='scale(1.05)'"
-    onmouseout="this.style.transform='scale(1)'">
-    🛠️ Panel LimaCityRP
-  </button>
-
+  <script src="assets/script.js"></script>
+  <!-- Netlify Identity widget en la HOME -->
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
   <script>
-    function goToAdminSafely(){
-      if (window.netlifyIdentity && window.netlifyIdentity.currentUser()){
-        location.href = "/admin/";
-      } else if (window.netlifyIdentity){
-        sessionStorage.setItem("go_admin_after_login","1");
-        window.netlifyIdentity.open();
-      } else {
+    if (window.netlifyIdentity) {
+      // Redirige al panel después de login
+      window.netlifyIdentity.on("login", () => {
+        document.location.href = "/admin/";
+      });
+      // Detecta el token del link del correo y completa la confirmación
+      window.netlifyIdentity.on("init", (user) => {
+        if (!user && window.location.hash.match(/confirmation_token/)) {
+          console.log("Confirming Netlify Identity token...");
+        }
+      });
+    }
+  </script>
+<!-- Botón para abrir el panel de administración -->
+<!-- ✅ Botón fijo para abrir el panel -->
+<button id="openAdmin"
+  style="
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    background: linear-gradient(135deg, #00b894, #00cec9);
+    color: white;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    transition: all 0.2s ease;
+  "
+  onmouseover="this.style.transform='scale(1.05)'"
+  onmouseout="this.style.transform='scale(1)'">
+  🛠️ Panel LimaCityRP
+</button>
+
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<script>
+  function goToAdminSafely(){
+    if (window.netlifyIdentity && window.netlifyIdentity.currentUser()){
+      location.href = "/admin/";
+    } else if (window.netlifyIdentity){
+      sessionStorage.setItem("go_admin_after_login","1");
+      window.netlifyIdentity.open();
+    } else {
+      location.href = "/admin/";
+    }
+  }
+  document.getElementById("openAdmin").addEventListener("click", goToAdminSafely);
+  if (window.netlifyIdentity) {
+    window.netlifyIdentity.on("login", () => {
+      if (sessionStorage.getItem("go_admin_after_login") === "1") {
+        sessionStorage.removeItem("go_admin_after_login");
         location.href = "/admin/";
       }
+    });
+  }
+</script>
+
+  // Esperar a que cargue el documento
+  document.addEventListener("DOMContentLoaded", () => {
+
+    // 🔹 Cuando el usuario hace clic en el botón
+    const adminBtn = document.getElementById("openAdmin");
+    if (adminBtn) {
+      adminBtn.addEventListener("click", () => {
+        if (window.netlifyIdentity && window.netlifyIdentity.currentUser()) {
+          // Ya logueado → entra directo al panel
+          location.href = "/admin/";
+        } else if (window.netlifyIdentity) {
+          // No logueado → abre el popup y marca intención
+          sessionStorage.setItem("go_admin_after_login", "1");
+          window.netlifyIdentity.open();
+        } else {
+          // Fallback (por si no carga el widget)
+          location.href = "/admin/";
+        }
+      });
     }
-    document.getElementById("openAdmin").addEventListener("click", goToAdminSafely);
+
+    // 🔹 Si inicia sesión desde el popup, ir al panel solo si el usuario lo pidió
     if (window.netlifyIdentity) {
       window.netlifyIdentity.on("login", () => {
         if (sessionStorage.getItem("go_admin_after_login") === "1") {
@@ -163,6 +272,91 @@
         }
       });
     }
-  </script>
+  });
+</script>
+
+
+<!-- Parser Markdown -->
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+<script>
+(async function loadNews(){
+  const owner = "FabricioAgurto";           // <- tu usuario de GitHub
+  const repo  = "limacity_site";            // <- tu repo
+  const path  = "content/noticias";         // <- carpeta de la colección
+
+  const listUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
+  try {
+    const resp = await fetch(listUrl, { headers: { "Accept": "application/vnd.github.v3+json" }});
+    if (!resp.ok) throw new Error("No pude listar noticias");
+    const files = (await resp.json()).filter(f => f.name.endsWith(".md"));
+
+    if (!files.length) {
+      document.getElementById("news-empty").style.display = "block";
+      return;
+    }
+
+    // Descarga cada noticia y parsea frontmatter + body
+    const items = [];
+    for (const f of files) {
+      const mdResp = await fetch(f.download_url);
+      const md = await mdResp.text();
+
+      // --- frontmatter ---
+      let title = "Sin título", date = "", body = md;
+      const fm = md.match(/^---\s*([\s\S]*?)\s*---\s*([\s\S]*)$/);
+      if (fm) {
+        const yaml = fm[1];
+        body = fm[2];
+        const t = yaml.match(/(?:^|\n)\s*title:\s*["']?(.+?)["']?\s*$/);
+        const d = yaml.match(/(?:^|\n)\s*date:\s*["']?(.+?)["']?\s*$/);
+        if (t) title = t[1];
+        if (d) date  = d[1];
+      }
+
+      items.push({ title, date, body, file: f.name });
+    }
+
+    // Ordena por fecha descendente
+    items.sort((a,b) => new Date(b.date || 0) - new Date(a.date || 0));
+
+    // Render: top 5
+    const container = document.getElementById("news-list");
+    container.innerHTML = "";
+    for (const item of items.slice(0,5)) {
+      const card = document.createElement("article");
+      card.style.cssText = "border:1px solid #eee;border-radius:12px;padding:16px;background:#fff";
+
+      const h3 = document.createElement("h3");
+      h3.textContent = item.title;
+      h3.style.cssText = "margin:0 0 6px;font-size:20px";
+
+      const small = document.createElement("div");
+      small.textContent = item.date ? new Date(item.date).toLocaleDateString() : "";
+      small.style.cssText = "color:#888;margin-bottom:12px";
+
+      const content = document.createElement("div");
+      content.innerHTML = marked.parse(item.body);
+
+      // Enlace al archivo fuente (opcional)
+      const link = document.createElement("a");
+      link.href = `/content/noticias/${item.file}`;
+      link.textContent = "Ver fuente (.md)";
+      link.style.cssText = "display:inline-block;margin-top:10px;color:#3b82f6";
+      link.target = "_blank";
+
+      card.appendChild(h3);
+      card.appendChild(small);
+      card.appendChild(content);
+      card.appendChild(link);
+      container.appendChild(card);
+    }
+  } catch (e) {
+    console.error(e);
+    document.getElementById("news-empty").style.display = "block";
+  }
+})();
+</script>
+
 </body>
 </html>
