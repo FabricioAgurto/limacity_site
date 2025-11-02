@@ -9,18 +9,16 @@
       "url": "/noticias/nueva-web-publicada-en-netlify/"
     },
     {
-      "title": "Nueva web publicada en Netlify",
-      "date": "2025-11-01",
-      "author": "Staff",
-      "summary": "Sitio oficial online con diseño neon y moderno.",
-      "slug": "nueva-web-publicada-en-netlify",
-      "url": "/noticias/nueva-web-publicada-en-netlify/"
-    },
-    {
       "author": "Geral",
       "date": "2025-11-02",
       "title": "random",
       "summary": "nara"
+    },
+    {
+      "author": "Staff",
+      "date": "2025-11-02",
+      "title": "prueba",
+      "summary": "prueba"
     }
   ]
 }
