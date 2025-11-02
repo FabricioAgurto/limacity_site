@@ -84,3 +84,29 @@ a{color:inherit;text-decoration:none}
 }
 .admin-link:hover{ border-color: rgba(255,255,255,.35); }
 @media (max-width:860px){ .admin-link{ display:none; } }
+.btn-discord {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  z-index: 50;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #5865F2; /* color oficial Discord */
+  color: #fff;
+  font-weight: 700;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 16px;
+  text-decoration: none;
+  box-shadow: 0 8px 24px rgba(0,0,0,.35);
+  transition: all .25s ease;
+}
+.btn-discord:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+}
+.btn-discord .icon {
+  width: 20px;
+  height: 20px;
+}
