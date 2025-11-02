@@ -5,44 +5,41 @@
     <title>LimaCityRP Panel</title>
   </head>
   <body>
- <!-- Botón fijo para volver al sitio (abajo-derecha) -->
+    <!-- Botón fijo para volver al sitio (abajo-derecha) -->
     <a href="/"
-      style="
-        position:fixed;
-        right:16px; bottom:16px;
-        z-index:2147483647;
-        background:#1f2937;
-        color:#fff;
-        padding:10px 14px;
-        border-radius:10px;
-        text-decoration:none;
-        font-weight:700;
-        box-shadow:0 6px 16px rgba(0,0,0,.25);
-      ">
+       style="
+         position:fixed;
+         right:16px; bottom:16px;
+         z-index:2147483647;
+         background:#1f2937;
+         color:#fff;
+         padding:10px 14px;
+         border-radius:10px;
+         text-decoration:none;
+         font-weight:700;
+         box-shadow:0 6px 16px rgba(0,0,0,.25);
+       ">
       ← Volver al sitio
     </a>
 
-
-    <!-- Scripts del CMS -->
+    <!-- Widget de Identity y CMS -->
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js" defer></script>
     <script src="https://unpkg.com/netlify-cms@^2.0.0/dist/netlify-cms.js" defer></script>
 
     <script>
-      document.addEventListener("DOMContentLoaded", function () {
+      // En el panel NO redirigimos al /admin al iniciar sesión (ya estamos aquí).
+      // Solo, si el usuario hace logout desde el menú del CMS, volver al inicio.
+      document.addEventListener("DOMContentLoaded", () => {
         if (window.netlifyIdentity) {
-          // Si inicia sesión desde el popup, vuelve al dashboard del CMS
-          window.netlifyIdentity.on("login", () => {
-            document.location.href = "/admin/";
-          });
-          // Si cierra sesión desde el menú del CMS, vuelve al sitio
           window.netlifyIdentity.on("logout", () => {
-            document.location.href = "/";
+            location.href = "/";
           });
         }
       });
     </script>
   </body>
 </html>
+
 
 
 
