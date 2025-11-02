@@ -42,6 +42,12 @@
     </div>
     <div class="bg-blur"></div>
   </main>
+  <section id="news" style="max-width:900px;margin:40px auto;padding:0 16px">
+    <h2 style="font-size:28px;margin-bottom:16px">📰 Noticias del servidor</h2>
+    <div id="news-list" style="display:grid;gap:16px"></div>
+    <div id="news-empty" style="display:none;color:#888">No hay noticias publicadas aún.</div>
+  </section>
+
 
   <section id="novedades" class="section">
     <div class="wrap">
@@ -176,6 +182,87 @@
       document.location.href = "/admin/";
     });
   }
+</script>
+<!-- Parser Markdown -->
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+<script>
+(async function loadNews(){
+  const owner = "FabricioAgurto";           // <- tu usuario de GitHub
+  const repo  = "limacity_site";            // <- tu repo
+  const path  = "content/noticias";         // <- carpeta de la colección
+
+  const listUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
+  try {
+    const resp = await fetch(listUrl, { headers: { "Accept": "application/vnd.github.v3+json" }});
+    if (!resp.ok) throw new Error("No pude listar noticias");
+    const files = (await resp.json()).filter(f => f.name.endsWith(".md"));
+
+    if (!files.length) {
+      document.getElementById("news-empty").style.display = "block";
+      return;
+    }
+
+    // Descarga cada noticia y parsea frontmatter + body
+    const items = [];
+    for (const f of files) {
+      const mdResp = await fetch(f.download_url);
+      const md = await mdResp.text();
+
+      // --- frontmatter ---
+      let title = "Sin título", date = "", body = md;
+      const fm = md.match(/^---\s*([\s\S]*?)\s*---\s*([\s\S]*)$/);
+      if (fm) {
+        const yaml = fm[1];
+        body = fm[2];
+        const t = yaml.match(/(?:^|\n)\s*title:\s*["']?(.+?)["']?\s*$/);
+        const d = yaml.match(/(?:^|\n)\s*date:\s*["']?(.+?)["']?\s*$/);
+        if (t) title = t[1];
+        if (d) date  = d[1];
+      }
+
+      items.push({ title, date, body, file: f.name });
+    }
+
+    // Ordena por fecha descendente
+    items.sort((a,b) => new Date(b.date || 0) - new Date(a.date || 0));
+
+    // Render: top 5
+    const container = document.getElementById("news-list");
+    container.innerHTML = "";
+    for (const item of items.slice(0,5)) {
+      const card = document.createElement("article");
+      card.style.cssText = "border:1px solid #eee;border-radius:12px;padding:16px;background:#fff";
+
+      const h3 = document.createElement("h3");
+      h3.textContent = item.title;
+      h3.style.cssText = "margin:0 0 6px;font-size:20px";
+
+      const small = document.createElement("div");
+      small.textContent = item.date ? new Date(item.date).toLocaleDateString() : "";
+      small.style.cssText = "color:#888;margin-bottom:12px";
+
+      const content = document.createElement("div");
+      content.innerHTML = marked.parse(item.body);
+
+      // Enlace al archivo fuente (opcional)
+      const link = document.createElement("a");
+      link.href = `/content/noticias/${item.file}`;
+      link.textContent = "Ver fuente (.md)";
+      link.style.cssText = "display:inline-block;margin-top:10px;color:#3b82f6";
+      link.target = "_blank";
+
+      card.appendChild(h3);
+      card.appendChild(small);
+      card.appendChild(content);
+      card.appendChild(link);
+      container.appendChild(card);
+    }
+  } catch (e) {
+    console.error(e);
+    document.getElementById("news-empty").style.display = "block";
+  }
+})();
 </script>
 
 </body>
