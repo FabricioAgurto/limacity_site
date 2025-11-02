@@ -96,23 +96,6 @@
   .lc-news-link:hover{opacity:.9;text-decoration:underline}
 </style>
 
-<script>
-const srEls = document.querySelectorAll("[data-reveal]");
-const io = new IntersectionObserver(entries=>{
-  entries.forEach(e=>{
-    if(e.isIntersecting){
-      e.target.style.transform="translateY(0)";
-      e.target.style.opacity="1";
-      io.unobserve(e.target);
-    }
-  })
-},{threshold:.12});
-srEls.forEach(el=>{
-  el.style.opacity="0"; el.style.transform="translateY(12px)";
-  el.style.transition="opacity .5s ease, transform .5s ease";
-  io.observe(el);
-});
-</script>
 
 <script>
   // Utilidad: formatea YYYY-MM-DD a algo más legible
