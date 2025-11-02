@@ -1,0 +1,19 @@
+backend:
+  name: auth0
+  auth_type: implicit
+  app_domain: dev-n4useo2af2hl4c4f.us.auth0.com
+  api_token: IavUI4JJFHIWTG8pdSKxYUlDwgbIlT4S
+  branch: main
+
+media_folder: "static/uploads"
+public_folder: "/uploads"
+
+collections:
+  - name: "noticias"
+    label: "Noticias"
+    folder: "content/noticias"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Título", name: "title", widget: "string" }
+      - { label: "Contenido", name: "body", widget: "markdown" }
