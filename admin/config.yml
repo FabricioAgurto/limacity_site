@@ -1,8 +1,5 @@
 backend:
-  name: auth0
-  auth_type: implicit
-  app_domain: dev-n4useo2af2hl4c4f.us.auth0.com
-  api_token: IavUI4JJFHIWTG8pdSKxYUlDwgbIlT4S
+  name: git-gateway
   branch: main
 
 media_folder: "static/uploads"
