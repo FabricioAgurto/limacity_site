@@ -45,14 +45,14 @@
   <!-- ====== NOTICIAS LIMA CITY RP ====== -->
 <!-- ==== NOTICIAS DEL SERVIDOR (cards) ==== -->
 <section id="noticias" class="py-12 px-6 md:px-10">
-  <h2 class="text-3xl md:text-4xl font-extrabold text-white mb-2">
-    📰 Noticias del servidor
-  </h2>
-  <p class="text-zinc-400 mb-8">Últimas novedades y anuncios oficiales.</p>
 
-  <div id="news-cards" class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-    <!-- Las tarjetas se generan por JS -->
+  <div class="wrap">
+    <h2>📰 Noticias del servidor</h2>
+    <p class="muted">Últimas novedades y anuncios oficiales.</p>
+    <div id="news-cards" class="news-grid"></div>
+    <div id="news-fallback" class="muted" style="display:none;">No se pudieron cargar las noticias por ahora.</div>
   </div>
+
 </section>
 
 <script>
@@ -109,8 +109,69 @@
 
 
 
+<!-- Markdown parser -->
+<script>
+(async function loadNews(){
+  const owner = "FabricioAgurto";        // <--- tu usuario
+  const repo  = "limacity_site";         // <--- tu repo
+  const path  = "content/noticias";      // <--- carpeta CMS
 
+  // Si tu repo es PRIVADO, cambia a una Function (te la dejo si la quieres).
+  const listUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
 
+  try {
+    const resp = await fetch(listUrl, { headers: { "Accept": "application/vnd.github.v3+json" }});
+    if (!resp.ok) throw new Error("No pude listar noticias");
+    const files = (await resp.json()).filter(f => f.name.endsWith(".md"));
+
+    if (!files.length){ document.getElementById("news-empty").style.display="block"; return; }
+
+    // Descargar y parsear
+    const items = [];
+    for (const f of files){
+      const md = await fetch(f.download_url).then(r=>r.text());
+      let title="Sin título", date="", body=md;
+
+      const fm = md.match(/^---\s*([\s\S]*?)\s*---\s*([\s\S]*)$/);
+      if (fm){
+        const yaml = fm[1]; body = fm[2];
+        const t = yaml.match(/(?:^|\n)\s*title:\s*["']?(.+?)["']?\s*$/);
+        const d = yaml.match(/(?:^|\n)\s*date:\s*["']?(.+?)["']?\s*$/);
+        if (t) title = t[1];
+        if (d) date  = d[1];
+      }
+
+      // Resumen plano (sin HTML) - 220 caracteres
+      const html = marked.parse(body);
+      const text = html.replace(/<[^>]+>/g, " ").replace(/\s+/g," ").trim();
+      const excerpt = text.length > 220 ? text.slice(0,220)+"…" : text;
+
+      items.push({title, date, excerpt, file:f.name});
+    }
+
+    // Ordenar por fecha desc
+    items.sort((a,b)=> new Date(b.date||0) - new Date(a.date||0));
+
+    // Render (máx 5)
+    const root = document.getElementById("news-list");
+    root.innerHTML = "";
+    for (const n of items.slice(0,5)){
+      const el = document.createElement("article");
+      el.className = "lc-card";
+      el.innerHTML = `
+        <h3>${n.title}</h3>
+        <small>${n.date ? new Date(n.date).toLocaleDateString() : ""}</small>
+        <p>${n.excerpt}</p>
+        <a class="lc-link" target="_blank" href="/content/noticias/${n.file}">Ver fuente (.md)</a>
+      `;
+      root.appendChild(el);
+    }
+  } catch(e){
+    console.error(e);
+    document.getElementById("news-empty").style.display="block";
+  }
+})();
+</script>
 
 
   <section id="normativas" class="section">
@@ -182,7 +243,6 @@
 
   <script src="assets/script.js"></script>
   <!-- Netlify Identity widget en la HOME -->
-  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
   <script>
     if (window.netlifyIdentity) {
       // Redirige al panel después de login
@@ -218,8 +278,6 @@
   onmouseout="this.style.transform='scale(1)'">
   🛠️ Panel LimaCityRP
 </button>
-
-<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 <script>
   function goToAdminSafely(){
     if (window.netlifyIdentity && window.netlifyIdentity.currentUser()){
@@ -241,8 +299,6 @@
     });
   }
 </script>
-
-  // Esperar a que cargue el documento
   document.addEventListener("DOMContentLoaded", () => {
 
     // 🔹 Cuando el usuario hace clic en el botón
@@ -277,7 +333,6 @@
 
 
 <!-- Parser Markdown -->
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
 <script>
 (async function loadNews(){
@@ -358,5 +413,44 @@
 })();
 </script>
 
+
+<script>
+(function(){
+  function formatDate(iso){
+    try { const d = new Date(iso); return isNaN(d) ? "" : d.toISOString().slice(0,10); }
+    catch { return ""; }
+  }
+  function renderCard(item){
+    const title   = item.title  || "Sin título";
+    const date    = formatDate(item.date || item.published_at || "");
+    const author  = item.author || item.staff || "Staff";
+    const summary = item.summary || item.excerpt || "";
+    const url     = item.url || (item.slug ? ("/noticias/" + item.slug + "/") : "#");
+    const art = document.createElement("article");
+    art.className = "lc-news-card";
+    art.innerHTML = '<h3 class="lc-news-title">'+title+'</h3>' +
+                    '<div class="lc-news-meta">'+[date, author].filter(Boolean).join(" · ")+'</div>' +
+                    '<p class="lc-news-text">'+summary+'</p>' +
+                    '<a class="lc-news-link" href="'+url+'">Leer más →</a>';
+    return art;
+  }
+  document.addEventListener('DOMContentLoaded', function(){
+    var grid = document.getElementById("news-cards");
+    if(!grid) return;
+    fetch("/content/updates.json", { cache: "no-cache" })
+      .then(r => r.json())
+      .then(data => {
+        const items = Array.isArray(data) ? data : (data.items || []);
+        items.sort((a,b) => new Date(b.date || b.published_at || 0) - new Date(a.date || a.published_at || 0));
+        grid.innerHTML = "";
+        (items.length ? items : []).forEach(it => grid.appendChild(renderCard(it)));
+        if (!items.length) document.getElementById("news-fallback").style.display = "block";
+      })
+      .catch(() => { document.getElementById("news-fallback").style.display = "block"; });
+  });
+})();
+</script>
+
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </body>
 </html>
