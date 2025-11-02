@@ -5,7 +5,6 @@
     <title>LimaCityRP Panel</title>
   </head>
   <body>
-    <!-- Botón fijo para volver al sitio (abajo-derecha) -->
     <a href="/"
        style="
          position:fixed;
@@ -21,16 +20,12 @@
        ">
       ← Volver al sitio
     </a>
-
-    <!-- Widget de Identity y CMS -->
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js" defer></script>
     <script src="https://unpkg.com/netlify-cms@^2.0.0/dist/netlify-cms.js" defer></script>
-
     <script>
-      // En el panel NO redirigimos al /admin al iniciar sesión (ya estamos aquí).
-      // Solo, si el usuario hace logout desde el menú del CMS, volver al inicio.
       document.addEventListener("DOMContentLoaded", () => {
         if (window.netlifyIdentity) {
+          // Si cierras sesión desde el panel, vuelve a la página principal
           window.netlifyIdentity.on("logout", () => {
             location.href = "/";
           });
@@ -39,6 +34,7 @@
     </script>
   </body>
 </html>
+
 
 
 

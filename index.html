@@ -20,7 +20,7 @@
         <a href="#equipo">Equipo</a>
         <a href="#tienda">Tienda</a>
         <a href="#actualizaciones">Actualizaciones</a>
-        <a href="admin" class="admin-link">Panel</a>
+      
 
       </nav>
       <button id="hamburger" aria-label="Abrir menú" class="hamburger">
@@ -43,35 +43,31 @@
     <div class="bg-blur"></div>
   </main>
   <!-- ====== NOTICIAS LIMA CITY RP ====== -->
-<section id="news" class="lc-news">
-  <div class="lc-news__head">
-    <span class="lc-news__icon">📰</span>
-    <h2>Noticias del servidor</h2>
+<section id="noticias" class="bg-[#0f0f0f] py-8 px-6">
+  <h2 class="text-3xl font-bold text-white mb-8 text-center">📰 Noticias del servidor</h2>
+
+  <div id="news-container" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <!-- Las noticias se insertarán aquí dinámicamente -->
   </div>
-  <div id="news-list" class="lc-news__grid"></div>
-  <div id="news-empty" class="lc-news__empty">No hay noticias publicadas aún.</div>
 </section>
 
-<style>
-  .lc-news{max-width:1060px;margin:48px auto;padding:0 20px}
-  .lc-news__head{display:flex;align-items:center;gap:10px;margin-bottom:18px}
-  .lc-news__head h2{font-size:34px;line-height:1.1;margin:0;font-weight:800;color:#e8e8ff}
-  .lc-news__icon{font-size:28px;opacity:.9}
-  .lc-news__grid{display:grid;gap:16px}
-  .lc-card{
-    background: rgba(255,255,255,.04);
-    border:1px solid rgba(124,58,237,.25); /* morado suave */
-    border-radius:16px; padding:18px 18px 14px;
-    box-shadow: 0 8px 20px rgba(0,0,0,.25);
-    transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
-  }
-  .lc-card:hover{ transform: translateY(-2px); box-shadow:0 12px 28px rgba(0,0,0,.35); border-color:rgba(124,58,237,.45) }
-  .lc-card h3{margin:0 0 6px;font-size:22px;color:#f7f7ff;font-weight:800}
-  .lc-card small{display:block;color:#a6a6c7;margin-bottom:10px}
-  .lc-card p{margin:0;color:#dad9f7;opacity:.92}
-  .lc-card a.lc-link{display:inline-block;margin-top:10px;color:#9aa8ff;text-decoration:none;font-weight:700}
-  .lc-news__empty{display:none;color:#a6a6c7;margin-top:8px}
-</style>
+<script>
+  // Cargar noticias desde los archivos JSON o Markdown convertidos
+  fetch('/content/updates.json')
+    .then((res) => res.json())
+    .then((data) => {
+      const container = document.getElementById('news-container');
+      container.innerHTML = data.map(item => `
+        <div class="bg-zinc-900 rounded-2xl p-5 border border-zinc-800 shadow-md hover:scale-[1.02] transition-all">
+          <h3 class="text-lg text-white font-semibold mb-2">${item.title}</h3>
+          <p class="text-gray-400 text-sm mb-3">${item.summary || item.excerpt}</p>
+          <a href="${item.url}" class="text-indigo-400 hover:text-indigo-300 text-sm">Leer más →</a>
+        </div>
+      `).join('');
+    })
+    .catch(err => console.error('Error al cargar las noticias:', err));
+</script>
+
 
 <!-- Markdown parser -->
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -255,10 +251,29 @@
   🛠️ Panel LimaCityRP
 </button>
 
-<!-- ✅ Netlify Identity widget -->
 <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-
 <script>
+  function goToAdminSafely(){
+    if (window.netlifyIdentity && window.netlifyIdentity.currentUser()){
+      location.href = "/admin/";
+    } else if (window.netlifyIdentity){
+      sessionStorage.setItem("go_admin_after_login","1");
+      window.netlifyIdentity.open();
+    } else {
+      location.href = "/admin/";
+    }
+  }
+  document.getElementById("openAdmin").addEventListener("click", goToAdminSafely);
+  if (window.netlifyIdentity) {
+    window.netlifyIdentity.on("login", () => {
+      if (sessionStorage.getItem("go_admin_after_login") === "1") {
+        sessionStorage.removeItem("go_admin_after_login");
+        location.href = "/admin/";
+      }
+    });
+  }
+</script>
+
   // Esperar a que cargue el documento
   document.addEventListener("DOMContentLoaded", () => {
 
