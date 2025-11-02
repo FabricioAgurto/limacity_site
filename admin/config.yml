@@ -1,7 +1,7 @@
 backend:
   name: git-gateway
   branch: main
-  roles: ["admin","editor"]   # solo define quién puede entrar, NO permisos
+  roles: ["admin","editor","writer"]   # solo define quién puede entrar, NO permisos
 
 local_backend: false
 
