@@ -1,4 +1,13 @@
+# Solo admin/editor pueden acceder a /admin
 [[redirects]]
-  from = "/admin"
-  to = "/public/admin/index.html"
+  from = "/admin/*"
+  to = "/admin/index.html"
   status = 200
+  force = true
+  conditions = { Role = ["admin", "editor"] }
+
+# Si no tiene rol o no está logueado → 401
+[[redirects]]
+  from = "/admin/*"
+  to = "/401.html"
+  status = 401
