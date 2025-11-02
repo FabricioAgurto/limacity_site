@@ -14,3 +14,4 @@ collections:
     fields:
       - { label: "Título", name: "title", widget: "string" }
       - { label: "Contenido", name: "body", widget: "markdown" }
+
