@@ -136,6 +136,47 @@
       });
     }
   </script>
+<!-- Botón para abrir el panel de administración -->
+<button id="openAdmin"
+  style="
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    background-color: #00b894;
+    color: white;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  ">
+  🛠️ Panel LimaCityRP
+</button>
+
+<!-- Netlify Identity Widget -->
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<script>
+  if (window.netlifyIdentity) {
+    window.netlifyIdentity.on("init", (user) => {
+      const btn = document.getElementById("openAdmin");
+      btn.addEventListener("click", () => {
+        if (user) {
+          // Si el usuario ya está logueado, entra directo al panel
+          document.location.href = "/admin/";
+        } else {
+          // Si no, abre el login de Netlify Identity
+          window.netlifyIdentity.open();
+        }
+      });
+    });
+
+    // Si alguien se loguea desde el popup, redirígelo al panel
+    window.netlifyIdentity.on("login", () => {
+      document.location.href = "/admin/";
+    });
+  }
+</script>
 
 </body>
 </html>
