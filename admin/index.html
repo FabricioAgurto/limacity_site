@@ -32,6 +32,43 @@
         }
       });
     </script>
+    <script>
+  (function () {
+    // Espera a que Netlify Identity inicie
+    document.addEventListener('DOMContentLoaded', function () {
+      function hidePublishForNonEditors() {
+        try {
+          const u = window.netlifyIdentity && window.netlifyIdentity.currentUser();
+          const roles = (u && u.app_metadata && u.app_metadata.roles) || [];
+          const isAdminOrEditor = roles.includes('admin') || roles.includes('editor');
+
+          if (!isAdminOrEditor) {
+            // Oculta botones de Publish/Quick publish en la toolbar
+            const style = document.createElement('style');
+            style.innerHTML = `
+              [data-testid="editor-toolbar"] [data-testid="publish-button"],
+              [data-testid="editor-toolbar"] [data-testid="deploy-preview-button"],
+              [class*="PublishButton"],
+              [class*="UnpublishedEntryPublishControl"] {
+                display: none !important;
+              }
+            `;
+            document.head.appendChild(style);
+          }
+        } catch (e) { /* no-op */ }
+      }
+
+      // Cuando identity cambie de estado (login/logout)
+      if (window.netlifyIdentity) {
+        window.netlifyIdentity.on('init', hidePublishForNonEditors);
+        window.netlifyIdentity.on('login', hidePublishForNonEditors);
+      }
+      // Fallback por si identity tarda
+      setTimeout(hidePublishForNonEditors, 1500);
+    });
+  })();
+</script>
+
   </body>
 </html>
 
