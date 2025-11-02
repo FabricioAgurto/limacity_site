@@ -21,24 +21,47 @@
         }
       });
     </script>
-    <script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const header = document.querySelector(".nc-appHeader");
-    if (header) {
+<!-- Botón para volver al sitio principal -->
+<script>
+  (function () {
+    function injectBackLink() {
+      const header = document.querySelector(".nc-appHeader");
+      if (!header || header.querySelector("#back-to-site")) return;
+
       const link = document.createElement("a");
+      link.id = "back-to-site";
       link.href = "/";
       link.textContent = "← Volver al sitio";
-      link.style.color = "white";
+      link.style.display = "inline-block";
       link.style.marginLeft = "20px";
+      link.style.padding = "6px 10px";
+      link.style.borderRadius = "6px";
+      link.style.background = "rgba(255,255,255,0.12)";
+      link.style.color = "white";
       link.style.textDecoration = "none";
-      link.style.fontWeight = "bold";
+      link.style.fontWeight = "600";
+      link.style.lineHeight = "1";
       link.style.cursor = "pointer";
-      header.appendChild(link);
+      link.setAttribute("title", "Regresar a la web principal");
+
+      // inserta al inicio del header para que siempre sea visible
+      header.insertBefore(link, header.firstChild);
     }
-  });
+
+    // 1) intentar ahora
+    injectBackLink();
+
+    // 2) volver a intentar cuando cambian nodos (navegación interna del CMS)
+    const obs = new MutationObserver(injectBackLink);
+    obs.observe(document.documentElement, { childList: true, subtree: true });
+
+    // 3) fallback por si acaso
+    document.addEventListener("DOMContentLoaded", injectBackLink);
+    window.addEventListener("load", injectBackLink);
+  })();
 </script>
 
-  </body>
+</body>
 </html>
 
 
