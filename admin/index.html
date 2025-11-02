@@ -21,6 +21,23 @@
         }
       });
     </script>
+    <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const header = document.querySelector(".nc-appHeader");
+    if (header) {
+      const link = document.createElement("a");
+      link.href = "/";
+      link.textContent = "← Volver al sitio";
+      link.style.color = "white";
+      link.style.marginLeft = "20px";
+      link.style.textDecoration = "none";
+      link.style.fontWeight = "bold";
+      link.style.cursor = "pointer";
+      header.appendChild(link);
+    }
+  });
+</script>
+
   </body>
 </html>
 
