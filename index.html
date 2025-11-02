@@ -258,6 +258,32 @@
       });
     }
   </script>
+<button id="btnLogin" class="btn-login">Iniciar sesión</button>
+<button id="btnLogout" class="btn-login" style="display:none;">Cerrar sesión</button>
+<style>
+  /* Botones del header */
+  .btn-login {
+    background: linear-gradient(135deg, #00d8c6, #00b3ff);
+    color: #ffffff;
+    font-weight: 600;
+    border: none;
+    border-radius: 10px;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: "Poppins", sans-serif;
+    box-shadow: 0 0 12px rgba(0, 216, 198, 0.3);
+  }
+
+  .btn-login:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px rgba(0, 216, 198, 0.55);
+    filter: brightness(1.1);
+  }
+
+  
+</style>
+
 <!-- Botón para abrir el panel de administración -->
 <!-- ✅ Botón fijo para abrir el panel -->
 <button id="openAdmin"
@@ -511,6 +537,54 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 })();
 </script>
+<script>
+    // 👇 Pega aquí todo el código JS que te pasé
+    document.addEventListener("DOMContentLoaded", () => {
+      const adminBtn  = document.getElementById("openAdmin");
+      const btnLogin  = document.getElementById("btnLogin");
+      const btnLogout = document.getElementById("btnLogout");
 
+      function hasRole(user, roles) {
+        const r = user?.app_metadata?.roles || [];
+        return roles.some(role => r.includes(role));
+      }
+
+      function render(user) {
+        if (user) {
+          btnLogin.style.display  = "none";
+          btnLogout.style.display = "inline-flex";
+        } else {
+          btnLogin.style.display  = "inline-flex";
+          btnLogout.style.display = "none";
+        }
+
+        if (user && hasRole(user, ["admin","editor"])) {
+          adminBtn.style.display = "inline-flex";
+        } else {
+          adminBtn.style.display = "none";
+        }
+      }
+
+      if (window.netlifyIdentity) {
+        netlifyIdentity.on("init",  render);
+        netlifyIdentity.on("login", user => {
+          render(user);
+          if (hasRole(user, ["admin","editor"])) location.href = "/admin/";
+        });
+        netlifyIdentity.on("logout", () => render(null));
+        netlifyIdentity.init();
+
+        btnLogin?.addEventListener("click", () => netlifyIdentity.open());
+        btnLogout?.addEventListener("click", () => netlifyIdentity.logout());
+
+        adminBtn?.addEventListener("click", () => {
+          const user = netlifyIdentity.currentUser();
+          if (user && hasRole(user, ["admin","editor"])) location.href = "/admin/";
+          else if (!user) netlifyIdentity.open();
+          else alert("No tienes permiso para acceder al panel.");
+        });
+      }
+    });
+  </script>
 </body>
 </html>
