@@ -128,51 +128,47 @@ a{color:inherit;text-decoration:none}
 
 /* --- Normativas (plano, sin tarjeta) --- */
 /* Contenedor propio para centrar como el resto de secciones */
-.normativas-wrap{
-  max-width: 1200px;          /* igual que tus cards */
-  margin: 0 auto;             /* centra horizontal */
-  padding: 0 20px;            /* respiración lateral */
-  position: relative;         /* evita heredar posiciones raras */
-  z-index: 1;                 /* por si hay decoraciones detrás */
+/* mismo ancho que tus secciones centradas */
+.page-container{
+  max-width: 860px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 20px;
+  box-sizing: border-box;
 }
 
-/* Fila principal: título a la izq, botón a la der */
+/* fila título + botón */
+.section-normativas{ margin: 40px 0 28px; clear: both; }
 .section-normativas .norma-line{
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
 }
 
-/* Estilos de texto */
+/* tipografía */
 .section-normativas .norma-title{
-  margin: 0;
-  font-size: 28px;
-  color: #fff;
-  display: flex; gap: 10px; align-items: center;
+  margin: 0; font-size: 28px; color: #fff;
+  display: flex; align-items: center; gap: 10px;
 }
 .section-normativas .icon{ font-size: 22px; line-height: 1; }
 .section-normativas .norma-sub{ margin: 6px 0 0; color: #9aa0b0; }
 
-/* Botón/link a la derecha, sin posiciones raras */
+/* botón a la derecha, SIN absolute ni float */
 .section-normativas .norma-link{
-  position: static !important;       /* fuerza que no sea absolute */
-  color: #6ea0ff; text-decoration: none; font-weight: 700;
+  display: inline-flex; align-items: center; gap: 8px;
   padding: 10px 14px; border-radius: 12px;
-  border: 1px solid rgba(255,255,255,.08);
   background: rgba(255,255,255,.02);
+  border: 1px solid rgba(255,255,255,.08);
+  color: #6ea0ff; text-decoration: none; font-weight: 700;
+  position: static !important; float: none !important;
 }
 .section-normativas .norma-link:hover{
-  filter: brightness(1.05);
+  filter: brightness(1.06);
   border-color: rgba(255,255,255,.18);
 }
 
-/* Por si algo previo dejó floats activos */
-.section-normativas{ clear: both; }
-
-/* Responsive */
+/* responsive */
 @media (max-width: 720px){
   .section-normativas .norma-line{
     flex-direction: column; align-items: flex-start;
   }
 }
+
