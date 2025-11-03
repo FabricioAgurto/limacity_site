@@ -35,17 +35,27 @@ collections:
               - { label: "Slug (opcional)", name: "slug", widget: "string", required: false }
               - { label: "URL (Leer más)", name: "url", widget: "string", required: false }
 
-  # ❌ Desactiva la colección de artículos en Markdown para que no creen más .md
-  # Si deseas mantenerla oculta (no visible), deja create: false y omitela del menú.
-  # - name: "noticias"
-  #   label: "Artículos (Markdown)"
-  #   folder: "content/noticias"
-  #   create: false
-  #   slug: "{{slug}}"
-  #   format: "frontmatter"
-  #   fields:
-  #     - { label: "Título", name: "title", widget: "string" }
-  #     - { label: "Fecha", name: "date", widget: "datetime", format: "YYYY-MM-DD", time_format: false }
-  #     - { label: "Autor", name: "author", widget: "string", default: "Staff" }
-  #     - { label: "Resumen", name: "summary", widget: "text" }
-  #     - { label: "Cuerpo", name: "body", widget: "markdown" }
+collections:
+  - name: "updates"
+    label: "Noticias (cards)"
+    # ... tu configuración actual ...
+
+  - name: "normativas"
+    label: "Normativas"
+    files:
+      - file: "content/normativas.json"
+        label: "Listado de Normativas"
+        name: "normativas_json"
+        fields:
+          - label: "Normativas"
+            name: "items"
+            widget: "list"
+            summary: "{{fields.title}} — {{fields.date}} — {{fields.category}}"
+            fields:
+              - { label: "Título", name: "title", widget: "string" }
+              - { label: "Slug", name: "slug", widget: "string", hint: "url-friendly, ej: uso-general" }
+              - { label: "Fecha", name: "date", widget: "datetime" }
+              - { label: "Categoría", name: "category", widget: "select", options: ["General","Delictiva","EMS","LSC","Policía"] }
+              - { label: "Descripción corta", name: "excerpt", widget: "text" }
+              - { label: "Contenido completo (html/markdown)", name: "body", widget: "markdown" }
+  
