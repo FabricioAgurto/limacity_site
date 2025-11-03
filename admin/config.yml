@@ -5,8 +5,9 @@ backend:
 
 local_backend: false
 
-site_url: https://limacityrp.netlify.app
-display_url: https://limacityrp.netlify.app
+site_url: https://limacityrp.com
+display_url: https://limacityrp.com
+
 
 media_folder: "static/uploads"
 public_folder: "/uploads"
