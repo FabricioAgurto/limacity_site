@@ -1,97 +1,118 @@
-<!-- /normativas/index.html -->
 <!doctype html>
 <html lang="es">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Normativas</title>
-<style>
-/* Card styles adaptadas a tu diseño (rounded, dark) */
-.container{max-width:1200px;margin:40px auto;padding:0 20px}
-.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
-.search{min-width:260px;padding:8px 12px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:#0f1113;color:#fff}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}
-.card{background:#0f1113;padding:22px;border-radius:14px;box-shadow:0 10px 40px rgba(0,0,0,0.6);color:#ddd}
-.card h3{margin:0 0 8px;font-size:20px;color:#fff}
-.meta{font-size:13px;color:#9aa0b0;margin-bottom:12px}
-.excerpt{color:#c8ccd6;margin-bottom:16px;min-height:36px}
-.link{color:#6ea0ff;text-decoration:none;font-weight:600}
-.filter-row{display:flex;gap:12px;align-items:center}
-.select{padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:#0d0f11;color:#fff}
-</style>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Normativas | Limacity</title>
+  <meta name="description" content="Normativas oficiales del servidor: General, Delictiva, EMS, LSC y Policía."/>
+  <style>
+    :root{
+      --bg1:#0b0c0e; --bg2:#0f1113; --ink:#e8eaf0; --ink-2:#c8ccd6; --muted:#9aa0b0; --accent:#6ea0ff;
+      --radius:16px;
+    }
+    body{margin:0;background:linear-gradient(180deg,var(--bg1),var(--bg2));color:var(--ink);font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif}
+    .container{max-width:1200px;margin:36px auto;padding:0 20px}
+    .head{display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:16px}
+    h1{font-size:28px;margin:0}
+    p.lead{color:var(--muted);margin:6px 0 0}
+    .controls{display:flex;gap:10px;align-items:center}
+    .input,.select{padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.06);background:#0d0f11;color:#fff}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;margin-top:16px}
+    .card{background:var(--bg2);border-radius:var(--radius);padding:22px;box-shadow:0 12px 40px rgba(0,0,0,.55)}
+    .card h3{margin:0 0 8px;font-size:20px}
+    .meta{font-size:13px;color:var(--muted);margin-bottom:10px}
+    .excerpt{color:var(--ink-2);min-height:36px;margin-bottom:14px}
+    .link{color:var(--accent);text-decoration:none;font-weight:600}
+    .empty{color:var(--muted);padding:24px}
+    .toolbar{display:flex;align-items:center;gap:10px;margin-top:10px}
+    .badge{font-size:12px;padding:4px 8px;border-radius:999px;background:#13161a;border:1px solid rgba(255,255,255,.06);color:var(--muted)}
+  </style>
 </head>
-<body style="background:linear-gradient(180deg,#0b0c0e,#0f1113);font-family:Inter,system-ui,Arial,Helvetica,sans-serif;">
+<body>
   <div class="container">
-    <div class="header">
-      <div>
-        <h1 style="color:#fff">Normativas del Servidor</h1>
-        <p style="color:#9aa0b0;margin-top:6px">Busca y consulta las normativas oficiales por categoría.</p>
+    <header>
+      <h1>Normativas del Servidor</h1>
+      <p class="lead">Busca y filtra por categoría. Haz clic en “Leer más” para ver el detalle completo.</p>
+      <div class="head">
+        <div class="toolbar">
+          <span class="badge">General</span>
+          <span class="badge">Delictiva</span>
+          <span class="badge">EMS</span>
+          <span class="badge">LSC</span>
+          <span class="badge">Policía</span>
+        </div>
+        <div class="controls">
+          <input id="q" class="input" placeholder="Buscar por palabra clave..."/>
+          <select id="cat" class="select">
+            <option value="">Todas las categorías</option>
+            <option>General</option>
+            <option>Delictiva</option>
+            <option>EMS</option>
+            <option>LSC</option>
+            <option>Policía</option>
+          </select>
+        </div>
       </div>
+    </header>
 
-      <div class="filter-row">
-        <input id="q" class="search" placeholder="Buscar por palabra clave..." />
-        <select id="cat" class="select">
-          <option value="">Todas las categorías</option>
-          <option>General</option>
-          <option>Delictiva</option>
-          <option>EMS</option>
-          <option>LSC</option>
-          <option>Policía</option>
-        </select>
-      </div>
-    </div>
-
-    <div id="grid" class="grid"></div>
+    <section id="grid" class="grid" aria-live="polite"></section>
   </div>
 
-<script>
-const DATA_URL = '/content/normativas.json'; // AJUSTA si tu JSON está en /data/ o /static/
-let items = [];
+  <script>
+    const DATA_URL = '/content/normativas.json'; // ajusta si lo guardaste en otra ruta
+    let items = [];
 
-// helper para escapar html corto
-function escapeHtml(s){return (s||'').replace(/[&<>"']/g,c=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+    const $ = (id)=>document.getElementById(id);
+    const grid = $('grid'), q = $('q'), cat = $('cat');
 
-function renderGrid(list){
-  const grid = document.getElementById('grid');
-  grid.innerHTML = list.map(it => `
-    <article class="card">
-      <h3>${escapeHtml(it.title)}</h3>
-      <div class="meta">${new Date(it.date).toLocaleDateString('es-PE')} • ${escapeHtml(it.category || 'General')}</div>
-      <div class="excerpt">${escapeHtml(it.excerpt || '').slice(0,220)}</div>
-      <a class="link" href="/normativas/detalle.html?slug=${encodeURIComponent(it.slug)}">Leer más →</a>
-    </article>
-  `).join('') || '<p style="color:#9aa0b0">No se encontraron resultados.</p>';
-}
+    function escapeHtml(s){return (s||'').replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+    function fmtDate(d){try{return new Date(d).toLocaleDateString('es-PE')}catch{ return d }}
 
-function applyFilters(){
-  const q = (document.getElementById('q').value || '').trim().toLowerCase();
-  const cat = document.getElementById('cat').value;
-  let filtered = items.filter(it=>{
-    const hay = `${it.title} ${it.excerpt} ${it.body} ${it.category}`.toLowerCase();
-    const okCat = !cat || (it.category === cat);
-    const okQ = !q || hay.indexOf(q) !== -1;
-    return okCat && okQ;
-  });
-  renderGrid(filtered);
-}
+    function card(it){
+      const excerpt = (it.excerpt || '').trim();
+      return `
+        <article class="card">
+          <h3>${escapeHtml(it.title)}</h3>
+          <div class="meta">${fmtDate(it.date)} • ${escapeHtml(it.category || 'General')}</div>
+          <p class="excerpt">${escapeHtml(excerpt).slice(0,220)}</p>
+          <a class="link" href="/normativas/detalle.html?slug=${encodeURIComponent(it.slug)}">Leer más →</a>
+        </article>
+      `;
+    }
 
-async function init(){
-  try{
-    const r = await fetch(DATA_URL);
-    items = (await r.json()).items || [];
-    // ordenar por fecha desc
-    items.sort((a,b)=> new Date(b.date) - new Date(a.date));
-    renderGrid(items);
-  }catch(e){
-    console.error(e);
-    document.getElementById('grid').innerHTML = '<p style="color:#ff8b8b">Error cargando normativas.</p>';
-  }
+    function render(list){
+      grid.innerHTML = list.length
+        ? list.map(card).join('')
+        : `<div class="empty">No se encontraron normativas con esos filtros.</div>`;
+    }
 
-  document.getElementById('q').addEventListener('input', () => applyFilters());
-  document.getElementById('cat').addEventListener('change', () => applyFilters());
-}
+    function filter(){
+      const term = (q.value||'').toLowerCase().trim();
+      const sel = cat.value;
+      const out = items.filter(it=>{
+        const haystack = `${it.title} ${it.excerpt} ${it.body} ${it.category}`.toLowerCase();
+        const okQ = !term || haystack.includes(term);
+        const okC = !sel || (it.category === sel);
+        return okQ && okC;
+      });
+      render(out);
+    }
 
-init();
-</script>
+    async function init(){
+      try{
+        const r = await fetch(DATA_URL, {cache:'no-store'});
+        const data = await r.json();
+        items = (data.items || []).slice().sort((a,b)=>new Date(b.date)-new Date(a.date));
+        render(items);
+      }catch(e){
+        console.error(e);
+        grid.innerHTML = `<div class="empty">Error cargando normativas.</div>`;
+      }
+      q.addEventListener('input', filter);
+      cat.addEventListener('change', filter);
+    }
+    init();
+  </script>
 </body>
 </html>
+
