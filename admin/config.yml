@@ -1,26 +1,23 @@
-bbackend:
+backend:
   name: github
-  repo: FabricioAgurto/limacity_site   # ← TU repo en GitHub
+  repo: FabricioAgurto/limacity_site
   branch: main
-  base_url: https://auth-limacity.workers.dev   # ← TU Worker (paso 3)
-  auth_endpoint: /api/auth
-
-local_backend: false
-
-site_url: https://limacity-site.pages.dev       # ← cámbialo a https://limacityrp.com cuando conectes tu dominio
-display_url: https://limacity-site.pages.dev
 
 media_folder: "static/uploads"
 public_folder: "/uploads"
 
 publish_mode: editorial_workflow
-   # editores crean, directores publican
 
 collections:
-  # ÚNICA colección visible: actualiza el feed que la home consume
   - name: "updates"
-    label: "Noticias (cards)"
+    label: "Noticias"
     label_singular: "Noticia"
+    folder: "content"
+    extension: "json"
+    format: "json"
+    create: false
+    editor:
+      preview: false
     files:
       - file: "content/updates.json"
         label: "Listado de noticias"
@@ -32,27 +29,6 @@ collections:
             summary: "{{fields.title}} — {{fields.date}}"
             fields:
               - { label: "Título", name: "title", widget: "string" }
-              - { label: "Fecha", name: "date", widget: "datetime", format: "YYYY-MM-DD", time_format: false }
-              - { label: "Autor", name: "author", widget: "string", default: "Staff" }
-              - { label: "Resumen", name: "summary", widget: "text" }
-              - { label: "Slug (opcional)", name: "slug", widget: "string", required: false }
-              - { label: "URL (Leer más)", name: "url", widget: "string", required: false }
-  - name: "normativas"
-    label: "Normativas"
-    files:
-      - file: "content/normativas.json"
-        label: "Listado de Normativas"
-        name: "normativas_json"
-        fields:
-          - label: "Normativas"
-            name: "items"
-            widget: "list"
-            summary: "{{fields.title}} — {{fields.date}} — {{fields.category}}"
-            fields:
-              - { label: "Título", name: "title", widget: "string" }
-              - { label: "Slug", name: "slug", widget: "string", hint: "url-friendly, ej: uso-general" }
               - { label: "Fecha", name: "date", widget: "datetime" }
-              - { label: "Categoría", name: "category", widget: "select", options: ["General","Delictiva","EMS","LSC","Policía"] }
-              - { label: "Descripción corta", name: "excerpt", widget: "text" }
-              - { label: "Contenido completo (html/markdown)", name: "body", widget: "markdown" }
-  
+              - { label: "Autor", name: "author", widget: "string", default: "Staff" }
+              - { label: "Contenido", name: "content", widget: "text" }
