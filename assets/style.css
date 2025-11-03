@@ -123,22 +123,11 @@ a{color:inherit;text-decoration:none}
   --accent: #6ea0ff; /* azul del sitio */
 }
 
-/* Contenedor uniforme (igual ancho que el resto) */
-.section{ max-width: var(--maxw); margin: 48px auto; padding: 0 20px; }
 
 /* --- Normativas (plano, sin tarjeta) --- */
-/* Contenedor propio para centrar como el resto de secciones */
-/* mismo ancho que tus secciones centradas */
-.page-container{
-  max-width: 1000px;
-  width: 100%;
-  margin: 0 auto;
-  padding: 0 20px;
-  box-sizing: border-box;
-}
 
 /* fila título + botón */
-.section-normativas{ margin: 40px -20px 28px; clear: both; }
+.section-normativas{ margin: 40px 0px 28px; clear: both; }
 .section-normativas .norma-line{
   display: flex; align-items: center; justify-content: space-between; gap: 16px;
 }
