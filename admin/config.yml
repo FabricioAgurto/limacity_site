@@ -5,8 +5,9 @@ backend:
 
 local_backend: false
 
-site_url: https://limacityrp.com
-display_url: https://limacityrp.com
+site_url: https://limacity-site.pages.dev
+display_url: https://limacity-site.pages.dev
+
 
 
 media_folder: "static/uploads"
