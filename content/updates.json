@@ -1,4 +1,11 @@
 {
-  "items": []
+  "items": [
+    {
+      "title": "Noticia de ejemplo",
+      "date": "2025-11-02",
+      "author": "Staff",
+      "content": "Bienvenido al panel Lima City RP. Aquí aparecerán las noticias del servidor."
+    }
+  ]
 }
 
