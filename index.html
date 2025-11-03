@@ -596,7 +596,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         adminBtn?.addEventListener("click", () => {
           const user = netlifyIdentity.currentUser();
-          if (user && hasRole(user, ["admin","editor"])) location.href = "/admin/";
+          if (user && hasRole(user, ["admin","editor","writer"])) location.href = "/admin/";
           else if (!user) netlifyIdentity.open();
           else alert("No tienes permiso para acceder al panel.");
         });
