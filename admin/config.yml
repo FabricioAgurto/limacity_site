@@ -34,12 +34,6 @@ collections:
               - { label: "Resumen", name: "summary", widget: "text" }
               - { label: "Slug (opcional)", name: "slug", widget: "string", required: false }
               - { label: "URL (Leer más)", name: "url", widget: "string", required: false }
-
-collections:
-  - name: "updates"
-    label: "Noticias (cards)"
-    # ... tu configuración actual ...
-
   - name: "normativas"
     label: "Normativas"
     files:
