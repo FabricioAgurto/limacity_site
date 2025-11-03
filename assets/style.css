@@ -130,7 +130,7 @@ a{color:inherit;text-decoration:none}
 /* Contenedor propio para centrar como el resto de secciones */
 /* mismo ancho que tus secciones centradas */
 .page-container{
-  max-width: 860px;
+  max-width: 1000px;
   width: 100%;
   margin: 0 auto;
   padding: 0 20px;
