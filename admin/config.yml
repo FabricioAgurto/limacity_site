@@ -1,19 +1,20 @@
-backend:
-  name: git-gateway
+bbackend:
+  name: github
+  repo: FabricioAgurto/limacity_site   # ← TU repo en GitHub
   branch: main
-  roles: ["admin","editor","writer"]   # solo define quién puede entrar, NO permisos
+  base_url: https://auth-limacity.workers.dev   # ← TU Worker (paso 3)
+  auth_endpoint: /api/auth
 
 local_backend: false
 
-site_url: https://limacity-site.pages.dev
+site_url: https://limacity-site.pages.dev       # ← cámbialo a https://limacityrp.com cuando conectes tu dominio
 display_url: https://limacity-site.pages.dev
-
-
 
 media_folder: "static/uploads"
 public_folder: "/uploads"
 
-publish_mode: editorial_workflow   # editores crean, directores publican
+publish_mode: editorial_workflow
+   # editores crean, directores publican
 
 collections:
   # ÚNICA colección visible: actualiza el feed que la home consume
