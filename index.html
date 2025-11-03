@@ -575,7 +575,7 @@ document.addEventListener("DOMContentLoaded", () => {
           btnLogout.style.display = "none";
         }
 
-        if (user && hasRole(user, ["admin","editor"])) {
+        if (user && hasRole(user, ["admin","editor","writer"])) {
           adminBtn.style.display = "inline-flex";
         } else {
           adminBtn.style.display = "none";
@@ -586,7 +586,7 @@ document.addEventListener("DOMContentLoaded", () => {
         netlifyIdentity.on("init",  render);
         netlifyIdentity.on("login", user => {
           render(user);
-          if (hasRole(user, ["admin","editor"])) location.href = "/admin/";
+          if (hasRole(user, ["admin","editor","writer"])) location.href = "/admin/";
         });
         netlifyIdentity.on("logout", () => render(null));
         netlifyIdentity.init();
