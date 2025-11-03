@@ -110,3 +110,39 @@ a{color:inherit;text-decoration:none}
   width: 20px;
   height: 20px;
 }
+:root{
+  --maxw: 1200px;
+  --ink-muted: #9aa0b0;
+  --accent-blue: #6ea0ff; /* azul del sitio */
+}
+
+.section{ max-width: var(--maxw); margin: 48px auto; padding: 0 20px; }
+.section-inner{
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 16px;
+  padding: 20px 22px;
+  box-shadow: 0 10px 40px rgba(0,0,0,.35);
+}
+
+.section-title{
+  display: flex; align-items: center; gap: 10px;
+  font-size: 26px; margin: 0 0 8px; color: #fff;
+}
+.section-title .icon{ font-size: 24px; }
+
+.section-desc{ margin: 0; color: var(--ink-muted); }
+
+.link-blue{
+  color: var(--accent-blue);
+  text-decoration: none;
+  border-bottom: 1px dotted rgba(110,160,255,.5);
+  font-weight: 600;
+}
+.link-blue:hover{
+  color: #9fc0ff;
+  border-color: #9fc0ff;
+}
+
+/* Ajuste por si algo la empuja a un lado */
+.section-normativas{ clear: both; }
