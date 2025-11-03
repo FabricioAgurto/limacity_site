@@ -2,6 +2,9 @@ backend:
   name: github
   repo: FabricioAgurto/limacity_site
   branch: main
+  base_url: https://auth-limacity.workers.dev
+  auth_endpoint: oauth
+
 
 media_folder: "static/uploads"
 public_folder: "/uploads"
