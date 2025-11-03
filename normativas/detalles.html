@@ -1,0 +1,38 @@
+<!-- /normativas/detalle.html -->
+<!doctype html>
+<html lang="es"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Normativa</title>
+</head><body style="background:#0b0c0e;color:#ddd;font-family:Inter, system-ui;">
+  <a href="/normativas/" style="color:#6ea0ff;margin:20px;display:inline-block">← Volver</a>
+  <main id="content" style="max-width:900px;margin:30px auto;padding:20px;background:#0f1113;border-radius:12px;">
+    <h1 id="title"></h1>
+    <div id="meta" style="color:#9aa0b0;margin-bottom:18px"></div>
+    <article id="body"></article>
+  </main>
+
+<script>
+const DATA_URL = '/content/normativas.json';
+function qs(name){return new URLSearchParams(location.search).get(name)}
+async function init(){
+  const slug = qs('slug');
+  if(!slug){ document.getElementById('content').innerHTML='<p>Normativa no especificada.</p>'; return; }
+  try{
+    const r = await fetch(DATA_URL);
+    const items = (await r.json()).items || [];
+    const it = items.find(x=>x.slug === slug);
+    if(!it){ document.getElementById('content').innerHTML='<p>Normativa no encontrada.</p>'; return; }
+    document.getElementById('title').innerText = it.title;
+    document.getElementById('meta').innerText = `${new Date(it.date).toLocaleDateString('es-PE')} • ${it.category || ''}`;
+    // body is markdown — convert basic markdown to HTML or keep raw if HTML
+    // Simple markdown -> minimal transform (you can replace with a real markdown lib in build)
+    const md = it.body || '';
+    // very simple paragraph splits
+    document.getElementById('body').innerHTML = md.split('\n\n').map(p=>`<p>${p.replace(/\n/g,'<br/>')}</p>`).join('');
+  }catch(err){
+    document.getElementById('content').innerHTML='<p>Error cargando contenido.</p>';
+  }
+}
+init();
+</script>
+</body></html>

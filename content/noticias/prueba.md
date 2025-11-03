@@ -1,4 +1,0 @@
----
-title: PRUEBA
----
-P﻿RUEBA

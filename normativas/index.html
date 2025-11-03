@@ -1,0 +1,97 @@
+<!-- /normativas/index.html -->
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Normativas</title>
+<style>
+/* Card styles adaptadas a tu diseño (rounded, dark) */
+.container{max-width:1200px;margin:40px auto;padding:0 20px}
+.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.search{min-width:260px;padding:8px 12px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:#0f1113;color:#fff}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}
+.card{background:#0f1113;padding:22px;border-radius:14px;box-shadow:0 10px 40px rgba(0,0,0,0.6);color:#ddd}
+.card h3{margin:0 0 8px;font-size:20px;color:#fff}
+.meta{font-size:13px;color:#9aa0b0;margin-bottom:12px}
+.excerpt{color:#c8ccd6;margin-bottom:16px;min-height:36px}
+.link{color:#6ea0ff;text-decoration:none;font-weight:600}
+.filter-row{display:flex;gap:12px;align-items:center}
+.select{padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:#0d0f11;color:#fff}
+</style>
+</head>
+<body style="background:linear-gradient(180deg,#0b0c0e,#0f1113);font-family:Inter,system-ui,Arial,Helvetica,sans-serif;">
+  <div class="container">
+    <div class="header">
+      <div>
+        <h1 style="color:#fff">Normativas del Servidor</h1>
+        <p style="color:#9aa0b0;margin-top:6px">Busca y consulta las normativas oficiales por categoría.</p>
+      </div>
+
+      <div class="filter-row">
+        <input id="q" class="search" placeholder="Buscar por palabra clave..." />
+        <select id="cat" class="select">
+          <option value="">Todas las categorías</option>
+          <option>General</option>
+          <option>Delictiva</option>
+          <option>EMS</option>
+          <option>LSC</option>
+          <option>Policía</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="grid" class="grid"></div>
+  </div>
+
+<script>
+const DATA_URL = '/content/normativas.json'; // AJUSTA si tu JSON está en /data/ o /static/
+let items = [];
+
+// helper para escapar html corto
+function escapeHtml(s){return (s||'').replace(/[&<>"']/g,c=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+
+function renderGrid(list){
+  const grid = document.getElementById('grid');
+  grid.innerHTML = list.map(it => `
+    <article class="card">
+      <h3>${escapeHtml(it.title)}</h3>
+      <div class="meta">${new Date(it.date).toLocaleDateString('es-PE')} • ${escapeHtml(it.category || 'General')}</div>
+      <div class="excerpt">${escapeHtml(it.excerpt || '').slice(0,220)}</div>
+      <a class="link" href="/normativas/detalle.html?slug=${encodeURIComponent(it.slug)}">Leer más →</a>
+    </article>
+  `).join('') || '<p style="color:#9aa0b0">No se encontraron resultados.</p>';
+}
+
+function applyFilters(){
+  const q = (document.getElementById('q').value || '').trim().toLowerCase();
+  const cat = document.getElementById('cat').value;
+  let filtered = items.filter(it=>{
+    const hay = `${it.title} ${it.excerpt} ${it.body} ${it.category}`.toLowerCase();
+    const okCat = !cat || (it.category === cat);
+    const okQ = !q || hay.indexOf(q) !== -1;
+    return okCat && okQ;
+  });
+  renderGrid(filtered);
+}
+
+async function init(){
+  try{
+    const r = await fetch(DATA_URL);
+    items = (await r.json()).items || [];
+    // ordenar por fecha desc
+    items.sort((a,b)=> new Date(b.date) - new Date(a.date));
+    renderGrid(items);
+  }catch(e){
+    console.error(e);
+    document.getElementById('grid').innerHTML = '<p style="color:#ff8b8b">Error cargando normativas.</p>';
+  }
+
+  document.getElementById('q').addEventListener('input', () => applyFilters());
+  document.getElementById('cat').addEventListener('change', () => applyFilters());
+}
+
+init();
+</script>
+</body>
+</html>

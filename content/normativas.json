@@ -1,0 +1,28 @@
+{
+  "items": [
+    {
+      "title": "Normativa General del Servidor",
+      "slug": "normativa-general",
+      "date": "2025-11-02",
+      "category": "General",
+      "excerpt": "Reglamento general aplicable a todos los jugadores del servidor.",
+      "body": "### Artículo 1\nTodos los jugadores deben respetar las normas básicas de convivencia.\n\n### Artículo 2\nEl uso de bugs o exploits está prohibido.\n\n### Artículo 3\nEl staff podrá aplicar sanciones según la gravedad del caso."
+    },
+    {
+      "title": "Normativa Delictiva",
+      "slug": "normativa-delictiva",
+      "date": "2025-11-02",
+      "category": "Delictiva",
+      "excerpt": "Reglas específicas para actividades criminales dentro del rol.",
+      "body": "### Artículo 1\nLos robos deben tener un mínimo de tres agentes involucrados.\n\n### Artículo 2\nEstá prohibido usar vehículos blindados para huir de robos.\n\n### Artículo 3\nEl uso de rehenes debe ser coherente con la situación de rol."
+    },
+    {
+      "title": "Normativa EMS",
+      "slug": "normativa-ems",
+      "date": "2025-11-02",
+      "category": "EMS",
+      "excerpt": "Protocolo de actuación para el cuerpo médico del servidor.",
+      "body": "### Artículo 1\nLos miembros de EMS deben priorizar siempre la seguridad antes de atender heridos.\n\n### Artículo 2\nEstá prohibido portar armas de fuego en servicio.\n\n### Artículo 3\nSe debe reportar toda actividad sospechosa al Departamento de Policía."
+    }
+  ]
+}
